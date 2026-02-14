@@ -54,7 +54,7 @@ class ScreenRecorderApp(ctk.CTk):
         # If N divides W, then TileW = W/N is integer.
         # So we want N in common_factors.
         
-        min_tile_width = 40
+        min_tile_width = 16
         self.divisors = [n for n in common if (self.screen_w // n) >= min_tile_width]
         self.divisors.sort() # Ascending grid divisions (1 = full screen)
         
