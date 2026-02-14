@@ -20,6 +20,7 @@ class ScreenRecorder:
         # Default settings
         self.fps = 10
         self.sensitivity = 50 # 0-100, where 0 is very sensitive (captures small changes), 100 is least sensitive
+        self.quality = 100 # JPEG Quality (0-100)
         
         self.current_session_dir = None
         self.frame_count = 0
@@ -63,6 +64,9 @@ class ScreenRecorder:
         # UI 100 (High Sens) -> Threshold 0 (Capture everything)
         # Simple linear map: Threshold = 50 * (1 - (sensitivity / 100))
         self.sensitivity = sensitivity
+
+    def set_quality(self, quality):
+        self.quality = max(1, min(quality, 100))
 
     def _get_threshold(self):
         # Invert sensitivity for threshold calculation
@@ -109,7 +113,7 @@ class ScreenRecorder:
                         filename = os.path.join(self.current_session_dir, f"frame_{self.frame_count:05d}.jpg")
                         # Use Pillow for saving or cv2.imwrite
                         # cv2.imwrite is faster usually
-                        cv2.imwrite(filename, frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, 90])
+                        cv2.imwrite(filename, frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, self.quality])
                         self.frame_count += 1
                         prev_frame = frame_bgr
                 except Exception as e:

@@ -51,9 +51,17 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_fps.set(10)
         self.slider_fps.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
+        # Quality Slider
+        self.label_qual = ctk.CTkLabel(self.settings_frame, text="Quality (100%):", width=120, anchor="w")
+        self.label_qual.grid(row=2, column=0, padx=10, pady=10)
+        
+        self.slider_qual = ctk.CTkSlider(self.settings_frame, from_=1, to=100, number_of_steps=99, command=self.update_qual_lbl)
+        self.slider_qual.set(100)
+        self.slider_qual.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+
         # Controls
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=40, font=("Roboto", 14, "bold"))
-        self.btn_record.grid(row=3, column=0, padx=20, pady=20, sticky="ew")
+        self.btn_record.grid(row=4, column=0, padx=20, pady=20, sticky="ew")
 
     def update_sensitivity_lbl(self, value):
         sens = int(value)
@@ -64,6 +72,11 @@ class ScreenRecorderApp(ctk.CTk):
         fps = int(value)
         self.label_fps.configure(text=f"FPS ({fps}):")
         self.recorder.set_fps(fps)
+
+    def update_qual_lbl(self, value):
+        qual = int(value)
+        self.label_qual.configure(text=f"Quality ({qual}%):")
+        self.recorder.set_quality(qual)
 
     def toggle_recording(self):
         if not self.is_recording:

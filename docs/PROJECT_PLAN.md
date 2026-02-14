@@ -39,15 +39,20 @@ This document outlines the development plan for the Simple Screen Recorder appli
 ### C. Frame Rate Control
 - Use a timer or `time.sleep()` to limit the capture loop frequency based on user FPS setting.
 
-### D. Output Management
-- Create a timestamped folder for each session.
-- Save images as `frame_00001.jpg`, `frame_00002.jpg`, etc.
+### E. Git Integration
+- repo initialized.
+- .gitignore configured for venv and recordings.
+
+### F. Compression Control
+- JPEG Quality adjustment (1-100%).
+- Defaults to 100% for best quality.
 
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.
 - [x] **Phase 2: UI Implementation** - Create the settings window and controls.
 - [x] **Phase 3: Integration** - Connect UI to logic.
+- [x] **Phase 3.5: Enhancements** - Git setup, Compression settings, Threading fixes.
 - [ ] **Phase 4: Testing & Polish** - Verify performance and UX.
 
 ## 5. Documentation Tasks

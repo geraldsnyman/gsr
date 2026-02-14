@@ -17,6 +17,13 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     cd ScreenRecorder
     ```
 
+    *Optional: Initialize Git to track your changes:*
+    ```bash
+    git init
+    git add .
+    git commit -m "Initial setup"
+    ```
+
 2.  **Set up a virtual environment** (recommended):
     ```bash
     python3 -m venv venv
@@ -44,6 +51,7 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
 2.  **Controls**:
     - **FPS**: Adjust the slider to set capture frequency.
     - **Sensitivity**: Adjust the threshold for motion detection (Higher = less sensitive, captures only big changes).
+    - **Quality**: Adjust the JPEG compression quality (1-100, default 100).
     - **Start Recording**: Begins capturing the screen.
     - **Stop Recording**: Stops capture and saves the sequence in a timestamped folder.
 
