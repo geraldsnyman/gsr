@@ -60,6 +60,3 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
 
 ## License
 Freeware. Feel free to use and modify.
-
-
-This is a typing test 240x135 60% 20 FPS ................
