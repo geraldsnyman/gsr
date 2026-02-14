@@ -22,17 +22,41 @@ class ScreenRecorderApp(ctk.CTk):
         # Get Screen Res
         self.screen_w, self.screen_h = self.recorder.get_screen_resolution()
         
-        # Calculate doubling divisors
-        # Start from max possible divisions (smallest tile ~48px width)
-        # Sequence: 80, 40, 20, 10, 5, 2, 1 (for 4K)
-        max_div = max(1, self.screen_w // 48)
+        # Calculate ALL valid integer grid divisors (factors) for the screen width
+        # This ensures every slider step results in a perfect integer tile size.
+        # We want tile widths >= 48px roughly.
+        
         self.divisors = []
-        curr = max_div
-        while curr > 1:
-            self.divisors.append(curr)
-            curr = curr // 2
-        self.divisors.append(1)
-        self.divisors.sort() # [1, 2, 5, 10, 20, 40, 80]
+        # Find factors of screen_w (e.g. 3840)
+        # We also need to be careful: does screen_h share the same factor ratio?
+        # If 16:9, W=16*U, H=9*U. If we divide W by N, TileW = W/N.
+        # TileH = H/N. We need H/N to also be integer?
+        # Yes, for perfect tiling, N must divide both W and H.
+        # So we find common factors of W and H.
+        
+        common_factors = []
+        import math
+        def get_factors(n):
+            f = set()
+            for i in range(1, int(math.sqrt(n)) + 1):
+                if n % i == 0:
+                    f.add(i)
+                    f.add(n // i)
+            return f
+
+        w_factors = get_factors(self.screen_w)
+        h_factors = get_factors(self.screen_h)
+        common = sorted(list(w_factors.intersection(h_factors)))
+        
+        # Filter for reasonable tile sizes (e.g. at least ~40px wide)
+        # N (divisions) = factor.
+        # Wait, if factor is the *Grid Size* (N)?
+        # If N divides W, then TileW = W/N is integer.
+        # So we want N in common_factors.
+        
+        min_tile_width = 40
+        self.divisors = [n for n in common if (self.screen_w // n) >= min_tile_width]
+        self.divisors.sort() # Ascending grid divisions (1 = full screen)
         
         num_steps = max(1, len(self.divisors) - 1)
 
