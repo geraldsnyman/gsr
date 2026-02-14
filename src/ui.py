@@ -1,10 +1,9 @@
-import signal
 import sys
 import tkinter as tk
 import customtkinter as ctk
 import os
 from tkinter import filedialog
-from .recorder import ScreenRecorder
+from recorder import ScreenRecorder
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
