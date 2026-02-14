@@ -19,8 +19,9 @@ class ScreenRecorder:
         
         # Default settings
         self.fps = 10
-        self.sensitivity = 50 # 0-100, where 0 is very sensitive (captures small changes), 100 is least sensitive
+        self.sensitivity = 50 
         self.quality = 100 # JPEG Quality (0-100)
+        self.tile_size = 100 # Tile size percentage (1-100). 100 = Full screen (1 tile), 1 = 1% size (~100x100 tiles)
         
         self.current_session_dir = None
         self.frame_count = 0
@@ -74,6 +75,9 @@ class ScreenRecorder:
         else:
             print(f"Invalid directory: {path}")
 
+    def set_tile_size(self, size):
+        self.tile_size = max(1, min(size, 100))
+
     def _get_threshold(self):
         # Invert sensitivity for threshold calculation
         # Sensitivity 100 -> Threshold 0 (Capture all)
@@ -103,11 +107,25 @@ class ScreenRecorder:
                         should_save = True
                     else:
                         # Calculate difference
-                        valid_region = frame_bgr  # Could optimize by resizing for diff check
-                        diff = cv2.absdiff(prev_frame, valid_region)
-                        # Convert diff to grayscale to check intensity
+                        # Optimization: Resize for sensitivity check?
+                        # We use full res difference, then downscale to "tile grid" for local sensitivity
+                        
+                        diff = cv2.absdiff(prev_frame, frame_bgr)
                         gray_diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-                        score = np.mean(gray_diff)
+                        
+                        # Tile Logic:
+                        # If tile_size is 100, grid is 1x1. Score is mean of whole image.
+                        # If tile_size is 1, grid is 100x100. Score is max of 10k tiles.
+                        # This allows detecting small changes (blinking cursor) in one tile even if rest is black.
+                        
+                        grid_h = max(1, int(100 / self.tile_size))
+                        grid_w = max(1, int(100 / self.tile_size))
+                        
+                        # Resize diff to grid size using AREA interpolation (averages pixels in the block)
+                        tiled_diff = cv2.resize(gray_diff, (grid_w, grid_h), interpolation=cv2.INTER_AREA)
+                        
+                        # Check if ANY tile exceeds threshold
+                        score = np.max(tiled_diff)
                         
                         threshold = self._get_threshold()
                         

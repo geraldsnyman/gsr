@@ -51,6 +51,10 @@ This document outlines the development plan for the Simple Screen Recorder appli
 - UI to browse and select output folder.
 - Displays current path.
 
+### H. Advanced Sensitivity (Tile Size)
+- Adjustable granularity for change detection.
+- Scale from 100% (Full screen) to 1% (Small tiles) for fine control.
+
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.
