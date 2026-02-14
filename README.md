@@ -50,8 +50,8 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
 
 2.  **Controls**:
     - **FPS**: Adjust the slider to set capture frequency.
-    - **Sensitivity**: Adjust the threshold for motion detection (Higher = less sensitive, captures only big changes).
-    - **Tile Size**: Adjust the granularity of detection (100% = Full Screen, 1% = Small Tiles). Lower percentage allows detecting smaller changes (like cursors) even with high sensitivity threshold.
+    - **Sensitivity**: Adjust the threshold for motion detection.
+    - **Tile Size**: Adjust the grid size for detection. Slider ranges from Full Screen (1x1) down to small tiles (approx 48x27 on 4K). Smaller tiles detect minute changes like cursors.
     - **Quality**: Adjust the JPEG compression quality (1-100, default 100).
     - **Output**: Browse and select the destination folder for recordings.
     - **Start Recording**: Begins capturing the screen.

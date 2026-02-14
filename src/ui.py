@@ -12,12 +12,16 @@ class ScreenRecorderApp(ctk.CTk):
         super().__init__()
 
         self.title("Simple Screen Recorder")
-        self.geometry("500x450")
+        self.geometry("500x520")
         self.resizable(False, False)
 
         # Initialize recorder
         self.recorder = ScreenRecorder()
         self.is_recording = False
+        
+        # Get Screen Res
+        self.screen_w, self.screen_h = self.recorder.get_screen_resolution()
+        self.max_divisions = max(1, self.screen_w // 48)
 
         # GUI Layout
         self.grid_columnconfigure(0, weight=1)
@@ -37,48 +41,53 @@ class ScreenRecorderApp(ctk.CTk):
         self.settings_frame.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
         self.settings_frame.grid_columnconfigure(1, weight=1)
 
+        # Screen Resolution
+        self.label_res = ctk.CTkLabel(self.settings_frame, text=f"Screen: {self.screen_w}x{self.screen_h}", text_color="gray")
+        self.label_res.grid(row=0, column=0, columnspan=2, pady=(10, 5))
+
         # Sensitivity Slider
         self.label_sens = ctk.CTkLabel(self.settings_frame, text="Sensitivity (50):", width=120, anchor="w")
-        self.label_sens.grid(row=0, column=0, padx=10, pady=10)
+        self.label_sens.grid(row=1, column=0, padx=10, pady=10)
         
         self.slider_sens = ctk.CTkSlider(self.settings_frame, from_=0, to=100, command=self.update_sensitivity_lbl)
         self.slider_sens.set(50) 
-        self.slider_sens.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+        self.slider_sens.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
-        # Tile Size Slider
-        self.label_tile = ctk.CTkLabel(self.settings_frame, text="Tile Size (100%):", width=120, anchor="w")
-        self.label_tile.grid(row=1, column=0, padx=10, pady=10)
+        # Tile Size Slider (Divisions)
+        # Default 1 = Full Screen.
+        self.label_tile = ctk.CTkLabel(self.settings_frame, text=f"Tile Size ({self.screen_w}x{self.screen_h}):", width=140, anchor="w")
+        self.label_tile.grid(row=2, column=0, padx=10, pady=10)
         
-        self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=1, to=100, number_of_steps=99, command=self.update_tile_lbl)
-        self.slider_tile.set(100)
-        self.slider_tile.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+        self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=1, to=self.max_divisions, number_of_steps=self.max_divisions-1, command=self.update_tile_lbl)
+        self.slider_tile.set(1)
+        self.slider_tile.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         # FPS Slider
         self.label_fps = ctk.CTkLabel(self.settings_frame, text="FPS (10):", width=120, anchor="w")
-        self.label_fps.grid(row=2, column=0, padx=10, pady=10)
+        self.label_fps.grid(row=3, column=0, padx=10, pady=10)
         
         self.slider_fps = ctk.CTkSlider(self.settings_frame, from_=1, to=60, number_of_steps=59, command=self.update_fps_lbl)
         self.slider_fps.set(10)
-        self.slider_fps.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+        self.slider_fps.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
 
         # Quality Slider
         self.label_qual = ctk.CTkLabel(self.settings_frame, text="Quality (100%):", width=120, anchor="w")
-        self.label_qual.grid(row=3, column=0, padx=10, pady=10)
+        self.label_qual.grid(row=4, column=0, padx=10, pady=10)
         
         self.slider_qual = ctk.CTkSlider(self.settings_frame, from_=1, to=100, number_of_steps=99, command=self.update_qual_lbl)
         self.slider_qual.set(100)
-        self.slider_qual.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
+        self.slider_qual.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
         # Output Directory
         self.label_dir_title = ctk.CTkLabel(self.settings_frame, text="Output:", width=120, anchor="w")
-        self.label_dir_title.grid(row=4, column=0, padx=10, pady=(10,0), sticky="nw")
+        self.label_dir_title.grid(row=5, column=0, padx=10, pady=(10,0), sticky="nw")
 
         self.dir_var = tk.StringVar(value=os.path.abspath(self.recorder.output_dir))
         self.label_dir_path = ctk.CTkLabel(self.settings_frame, textvariable=self.dir_var, text_color="gray", wraplength=250, justify="left")
-        self.label_dir_path.grid(row=4, column=1, padx=10, pady=(10,0), sticky="w")
+        self.label_dir_path.grid(row=5, column=1, padx=10, pady=(10,0), sticky="w")
         
         self.btn_dir = ctk.CTkButton(self.settings_frame, text="Browse...", width=100, command=self.select_directory)
-        self.btn_dir.grid(row=5, column=1, padx=10, pady=10, sticky="e")
+        self.btn_dir.grid(row=6, column=1, padx=10, pady=10, sticky="e")
 
         # Controls
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=40, font=("Roboto", 14, "bold"))
@@ -96,9 +105,10 @@ class ScreenRecorderApp(ctk.CTk):
         self.recorder.set_sensitivity(sens)
 
     def update_tile_lbl(self, value):
-        tile = int(value)
-        self.label_tile.configure(text=f"Tile Size ({tile}%):")
-        self.recorder.set_tile_size(tile)
+        divs = int(value)
+        self.recorder.set_tile_divisions(divs)
+        tw, th = self.recorder.get_tile_resolution()
+        self.label_tile.configure(text=f"Tile Size ({tw}x{th}):")
 
     def update_fps_lbl(self, value):
         fps = int(value)

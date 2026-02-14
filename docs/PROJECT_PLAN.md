@@ -51,9 +51,10 @@ This document outlines the development plan for the Simple Screen Recorder appli
 - UI to browse and select output folder.
 - Displays current path.
 
-### H. Advanced Sensitivity (Tile Size)
-- Adjustable granularity for change detection.
-- Scale from 100% (Full screen) to 1% (Small tiles) for fine control.
+### H. Grid-Based Sensitivity (Tile Size)
+- Adjustable grid granularity.
+- Granular control from Full Screen down to ~48px tiles for detecting minute changes.
+- Automatic calibration based on screen resolution.
 
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.

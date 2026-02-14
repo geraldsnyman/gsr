@@ -20,13 +20,21 @@ class ScreenRecorder:
         # Default settings
         self.fps = 10
         self.sensitivity = 50 
-        self.quality = 100 # JPEG Quality (0-100)
-        self.tile_size = 100 # Tile size percentage (1-100). 100 = Full screen (1 tile), 1 = 1% size (~100x100 tiles)
+        self.quality = 100 
+        self.tile_divisions = 1 # Number of tiles across width/height (1 = 1x1 grid)
         
         self.current_session_dir = None
         self.frame_count = 0
         # self.sct will be initialized in the thread to avoid X11 threading issues
         self.monitor_index = 1 
+        self._resolution = self.get_screen_resolution()
+
+    def get_screen_resolution(self):
+        with mss.mss() as sct:
+            if self.monitor_index < len(sct.monitors):
+                mon = sct.monitors[self.monitor_index]
+                return (mon["width"], mon["height"])
+            return (1920, 1080) # Fallback
 
     def start_recording(self):
         if self.running:
@@ -75,8 +83,14 @@ class ScreenRecorder:
         else:
             print(f"Invalid directory: {path}")
 
-    def set_tile_size(self, size):
-        self.tile_size = max(1, min(size, 100))
+    def set_tile_divisions(self, divisions):
+        self.tile_divisions = max(1, int(divisions))
+
+    def get_tile_resolution(self):
+        w, h = self._resolution
+        tw = w // self.tile_divisions
+        th = h // self.tile_divisions
+        return tw, th
 
     def _get_threshold(self):
         # Invert sensitivity for threshold calculation
@@ -107,19 +121,13 @@ class ScreenRecorder:
                         should_save = True
                     else:
                         # Calculate difference
-                        # Optimization: Resize for sensitivity check?
-                        # We use full res difference, then downscale to "tile grid" for local sensitivity
-                        
                         diff = cv2.absdiff(prev_frame, frame_bgr)
                         gray_diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
                         
                         # Tile Logic:
-                        # If tile_size is 100, grid is 1x1. Score is mean of whole image.
-                        # If tile_size is 1, grid is 100x100. Score is max of 10k tiles.
-                        # This allows detecting small changes (blinking cursor) in one tile even if rest is black.
-                        
-                        grid_h = max(1, int(100 / self.tile_size))
-                        grid_w = max(1, int(100 / self.tile_size))
+                        # Grid size is simply div x div
+                        grid_w = self.tile_divisions
+                        grid_h = self.tile_divisions
                         
                         # Resize diff to grid size using AREA interpolation (averages pixels in the block)
                         tiled_diff = cv2.resize(gray_diff, (grid_w, grid_h), interpolation=cv2.INTER_AREA)
