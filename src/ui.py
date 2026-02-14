@@ -21,7 +21,20 @@ class ScreenRecorderApp(ctk.CTk):
         
         # Get Screen Res
         self.screen_w, self.screen_h = self.recorder.get_screen_resolution()
-        self.max_divisions = max(1, self.screen_w // 48)
+        
+        # Calculate doubling divisors
+        # Start from max possible divisions (smallest tile ~48px width)
+        # Sequence: 80, 40, 20, 10, 5, 2, 1 (for 4K)
+        max_div = max(1, self.screen_w // 48)
+        self.divisors = []
+        curr = max_div
+        while curr > 1:
+            self.divisors.append(curr)
+            curr = curr // 2
+        self.divisors.append(1)
+        self.divisors.sort() # [1, 2, 5, 10, 20, 40, 80]
+        
+        num_steps = max(1, len(self.divisors) - 1)
 
         # GUI Layout
         self.grid_columnconfigure(0, weight=1)
@@ -53,13 +66,14 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_sens.set(50) 
         self.slider_sens.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
-        # Tile Size Slider (Divisions)
-        # Default 1 = Full Screen.
+        # Tile Size Slider (Doubling Steps)
+        # Default index 0 (Divisor 1 = Full Screen)
         self.label_tile = ctk.CTkLabel(self.settings_frame, text=f"Tile Size ({self.screen_w}x{self.screen_h}):", width=140, anchor="w")
         self.label_tile.grid(row=2, column=0, padx=10, pady=10)
         
-        self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=1, to=self.max_divisions, number_of_steps=self.max_divisions-1, command=self.update_tile_lbl)
-        self.slider_tile.set(1)
+        # Slider ranges from 0 to len-1 (indices of self.divisors)
+        self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=0, to=num_steps, number_of_steps=num_steps, command=self.update_tile_lbl)
+        self.slider_tile.set(0) # Default to Full Screen
         self.slider_tile.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         # FPS Slider
@@ -91,7 +105,7 @@ class ScreenRecorderApp(ctk.CTk):
 
         # Controls
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=40, font=("Roboto", 14, "bold"))
-        self.btn_record.grid(row=4, column=0, padx=20, pady=20, sticky="ew")
+        self.btn_record.grid(row=7, column=0, padx=20, pady=20, sticky="ew")
 
     def select_directory(self):
         directory = filedialog.askdirectory(initialdir=self.recorder.output_dir)
@@ -105,7 +119,11 @@ class ScreenRecorderApp(ctk.CTk):
         self.recorder.set_sensitivity(sens)
 
     def update_tile_lbl(self, value):
-        divs = int(value)
+        index = int(value + 0.5) # Round to nearest step
+        if index < 0: index = 0
+        if index >= len(self.divisors): index = len(self.divisors) - 1
+        
+        divs = self.divisors[index]
         self.recorder.set_tile_divisions(divs)
         tw, th = self.recorder.get_tile_resolution()
         self.label_tile.configure(text=f"Tile Size ({tw}x{th}):")

@@ -39,6 +39,10 @@ This document outlines the development plan for the Simple Screen Recorder appli
 ### C. Frame Rate Control
 - Use a timer or `time.sleep()` to limit the capture loop frequency based on user FPS setting.
 
+### D. Optimization & Efficiency
+- **Tile Alignment**: The "Tile Size" features uses doubling steps (powers of 2) to align grid boundaries with screen pixels where possible. This maximizes `cv2.resize` performance (INTER_AREA) by favoring integer downscaling factors.
+- **Lazy Evaluation**: Change detection is performed before saving.
+
 ### E. Git Integration
 - repo initialized.
 - .gitignore configured for venv and recordings.
