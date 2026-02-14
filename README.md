@@ -52,6 +52,7 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     - **FPS**: Adjust the slider to set capture frequency.
     - **Sensitivity**: Adjust the threshold for motion detection (Higher = less sensitive, captures only big changes).
     - **Quality**: Adjust the JPEG compression quality (1-100, default 100).
+    - **Output**: Browse and select the destination folder for recordings.
     - **Start Recording**: Begins capturing the screen.
     - **Stop Recording**: Stops capture and saves the sequence in a timestamped folder.
 

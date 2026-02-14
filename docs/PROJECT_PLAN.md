@@ -47,6 +47,10 @@ This document outlines the development plan for the Simple Screen Recorder appli
 - JPEG Quality adjustment (1-100%).
 - Defaults to 100% for best quality.
 
+### G. Directory Selection
+- UI to browse and select output folder.
+- Displays current path.
+
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.

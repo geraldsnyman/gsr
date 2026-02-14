@@ -5,12 +5,14 @@ import os
 import threading
 from recorder import ScreenRecorder
 
+import tkinter.filedialog as filedialog
+
 class ScreenRecorderApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         self.title("Simple Screen Recorder")
-        self.geometry("450x300")
+        self.geometry("500x450")
         self.resizable(False, False)
 
         # Initialize recorder
@@ -59,9 +61,26 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_qual.set(100)
         self.slider_qual.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
+        # Output Directory
+        self.label_dir_title = ctk.CTkLabel(self.settings_frame, text="Output:", width=120, anchor="w")
+        self.label_dir_title.grid(row=3, column=0, padx=10, pady=(10,0), sticky="nw")
+
+        self.dir_var = tk.StringVar(value=os.path.abspath(self.recorder.output_dir))
+        self.label_dir_path = ctk.CTkLabel(self.settings_frame, textvariable=self.dir_var, text_color="gray", wraplength=250, justify="left")
+        self.label_dir_path.grid(row=3, column=1, padx=10, pady=(10,0), sticky="w")
+        
+        self.btn_dir = ctk.CTkButton(self.settings_frame, text="Browse...", width=100, command=self.select_directory)
+        self.btn_dir.grid(row=4, column=1, padx=10, pady=10, sticky="e")
+
         # Controls
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=40, font=("Roboto", 14, "bold"))
         self.btn_record.grid(row=4, column=0, padx=20, pady=20, sticky="ew")
+
+    def select_directory(self):
+        directory = filedialog.askdirectory(initialdir=self.recorder.output_dir)
+        if directory:
+            self.recorder.set_output_dir(directory)
+            self.dir_var.set(directory)
 
     def update_sensitivity_lbl(self, value):
         sens = int(value)

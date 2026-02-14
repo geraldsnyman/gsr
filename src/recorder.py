@@ -68,6 +68,12 @@ class ScreenRecorder:
     def set_quality(self, quality):
         self.quality = max(1, min(quality, 100))
 
+    def set_output_dir(self, path):
+        if os.path.isdir(path):
+            self.output_dir = path
+        else:
+            print(f"Invalid directory: {path}")
+
     def _get_threshold(self):
         # Invert sensitivity for threshold calculation
         # Sensitivity 100 -> Threshold 0 (Capture all)
