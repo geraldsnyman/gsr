@@ -7,6 +7,7 @@ import cv2
 import mss
 import numpy as np
 from PIL import Image
+from pynput import keyboard
 
 class ScreenRecorder:
     def __init__(self, output_dir="recordings"):
@@ -16,12 +17,15 @@ class ScreenRecorder:
 
         self.running = False
         self.recording_thread = None
+        self.listener = None
         
         # Default settings
         self.fps = 20
         self.sensitivity = 60 
         self.quality = 100 
         self.tile_divisions = 1 # Number of tiles across width/height (1 = 1x1 grid)
+        self.capture_on_keystroke = False
+        self.key_pressed = False
         
         self.current_session_dir = None
         self.frame_count = 0
@@ -46,12 +50,19 @@ class ScreenRecorder:
         
         self.running = True
         self.frame_count = 0
+        
+        if self.capture_on_keystroke:
+            self._start_keyboard_listener()
+
         self.recording_thread = threading.Thread(target=self._record_loop)
         self.recording_thread.start()
         print(f"Recording started. Saving to {self.current_session_dir}")
 
     def stop_recording(self):
         self.running = False
+        if self.listener:
+            self.listener.stop()
+            self.listener = None
         if self.recording_thread:
             self.recording_thread.join()
         print("Recording stopped.")
@@ -91,6 +102,16 @@ class ScreenRecorder:
         tw = w // self.tile_divisions
         th = h // self.tile_divisions
         return tw, th
+        
+    def set_capture_on_keystroke(self, enabled):
+        self.capture_on_keystroke = enabled
+        
+    def _on_press(self, key):
+        self.key_pressed = True
+
+    def _start_keyboard_listener(self):
+        self.listener = keyboard.Listener(on_press=self._on_press)
+        self.listener.start()
 
     def _get_threshold(self):
         # Invert sensitivity for threshold calculation
@@ -117,28 +138,34 @@ class ScreenRecorder:
                     
                     should_save = False
                     
-                    if prev_frame is None:
+                    # Check Keystroke Trigger
+                    if self.capture_on_keystroke and self.key_pressed:
                         should_save = True
-                    else:
-                        # Calculate difference
-                        diff = cv2.absdiff(prev_frame, frame_bgr)
-                        gray_diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-                        
-                        # Tile Logic:
-                        # Grid size is simply div x div
-                        grid_w = self.tile_divisions
-                        grid_h = self.tile_divisions
-                        
-                        # Resize diff to grid size using AREA interpolation (averages pixels in the block)
-                        tiled_diff = cv2.resize(gray_diff, (grid_w, grid_h), interpolation=cv2.INTER_AREA)
-                        
-                        # Check if ANY tile exceeds threshold
-                        score = np.max(tiled_diff)
-                        
-                        threshold = self._get_threshold()
-                        
-                        if score > threshold:
+                        self.key_pressed = False # Reset trigger
+
+                    if not should_save:
+                        if prev_frame is None:
                             should_save = True
+                        else:
+                            # Calculate difference
+                            diff = cv2.absdiff(prev_frame, frame_bgr)
+                            gray_diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+                            
+                            # Tile Logic:
+                            # Grid size is simply div x div
+                            grid_w = self.tile_divisions
+                            grid_h = self.tile_divisions
+                            
+                            # Resize diff to grid size using AREA interpolation (averages pixels in the block)
+                            tiled_diff = cv2.resize(gray_diff, (grid_w, grid_h), interpolation=cv2.INTER_AREA)
+                            
+                            # Check if ANY tile exceeds threshold
+                            score = np.max(tiled_diff)
+                            
+                            threshold = self._get_threshold()
+                            
+                            if score > threshold:
+                                should_save = True
                             
                     if should_save:
                         # Save frame

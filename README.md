@@ -51,7 +51,8 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
 2.  **Controls**:
     - **FPS**: Adjust the slider to set capture frequency.
     - **Sensitivity**: Adjust the threshold for motion detection.
-    - **Tile Size**: Adjust the grid size for detection. Slider ranges from Full Screen (1x1) down to small tiles (approx 48x27 on 4K). Smaller tiles detect minute changes like cursors.
+    - **Tile Size**: Adjust the grid size for detection.
+    - **Capture on Keystroke**: Force capture a frame whenever a key is pressed (useful for typing).
     - **Quality**: Adjust the JPEG compression quality (1-100, default 100).
     - **Output**: Browse and select the destination folder for recordings.
     - **Start Recording**: Begins capturing the screen.
@@ -59,3 +60,6 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
 
 ## License
 Freeware. Feel free to use and modify.
+
+
+This is a typing test 240x135 60% 20 FPS ................

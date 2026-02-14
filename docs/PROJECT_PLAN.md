@@ -60,6 +60,10 @@ This document outlines the development plan for the Simple Screen Recorder appli
 - Granular control from Full Screen down to ~48px tiles for detecting minute changes.
 - Automatic calibration based on screen resolution.
 
+### I. Input-Triggered Capture
+- "Capture on Keystroke" option.
+- Bypasses sensitivity threshold when keys are pressed, ensuring text entry is never missed.
+
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.

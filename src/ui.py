@@ -91,41 +91,45 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_sens.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
         # Tile Size Slider (Doubling Steps)
-        # Default index 0 (Divisor 1 = Full Screen)
+        # Default index Max (Smallest Tile)
         self.label_tile = ctk.CTkLabel(self.settings_frame, text=f"Tile Size ({self.screen_w}x{self.screen_h}):", width=140, anchor="w")
         self.label_tile.grid(row=2, column=0, padx=10, pady=10)
         
         # Slider ranges from 0 to len-1 (indices of self.divisors)
         self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=0, to=num_steps, number_of_steps=num_steps, command=self.update_tile_lbl)
-        self.slider_tile.set(0) # Default to Full Screen
+        self.slider_tile.set(num_steps) # Default to Smallest Tile
         self.slider_tile.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+
+        # Key Capture Checkbox
+        self.check_key = ctk.CTkCheckBox(self.settings_frame, text="Capture on Keystroke", command=self.toggle_key_capture)
+        self.check_key.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
         # FPS Slider
         self.label_fps = ctk.CTkLabel(self.settings_frame, text="FPS (20):", width=120, anchor="w")
-        self.label_fps.grid(row=3, column=0, padx=10, pady=10)
+        self.label_fps.grid(row=4, column=0, padx=10, pady=10)
         
         self.slider_fps = ctk.CTkSlider(self.settings_frame, from_=1, to=60, number_of_steps=59, command=self.update_fps_lbl)
         self.slider_fps.set(20)
-        self.slider_fps.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
+        self.slider_fps.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
         # Quality Slider
         self.label_qual = ctk.CTkLabel(self.settings_frame, text="Quality (100%):", width=120, anchor="w")
-        self.label_qual.grid(row=4, column=0, padx=10, pady=10)
+        self.label_qual.grid(row=5, column=0, padx=10, pady=10)
         
         self.slider_qual = ctk.CTkSlider(self.settings_frame, from_=1, to=100, number_of_steps=99, command=self.update_qual_lbl)
         self.slider_qual.set(100)
-        self.slider_qual.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
+        self.slider_qual.grid(row=5, column=1, padx=10, pady=10, sticky="ew")
 
         # Output Directory
         self.label_dir_title = ctk.CTkLabel(self.settings_frame, text="Output:", width=120, anchor="w")
-        self.label_dir_title.grid(row=5, column=0, padx=10, pady=(10,0), sticky="nw")
+        self.label_dir_title.grid(row=6, column=0, padx=10, pady=(10,0), sticky="nw")
 
         self.dir_var = tk.StringVar(value=os.path.abspath(self.recorder.output_dir))
         self.label_dir_path = ctk.CTkLabel(self.settings_frame, textvariable=self.dir_var, text_color="gray", wraplength=250, justify="left")
-        self.label_dir_path.grid(row=5, column=1, padx=10, pady=(10,0), sticky="w")
+        self.label_dir_path.grid(row=6, column=1, padx=10, pady=(10,0), sticky="w")
         
         self.btn_dir = ctk.CTkButton(self.settings_frame, text="Browse...", width=100, command=self.select_directory)
-        self.btn_dir.grid(row=6, column=1, padx=10, pady=10, sticky="e")
+        self.btn_dir.grid(row=7, column=1, padx=10, pady=10, sticky="e")
 
         # Controls
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=40, font=("Roboto", 14, "bold"))
@@ -136,6 +140,10 @@ class ScreenRecorderApp(ctk.CTk):
         if directory:
             self.recorder.set_output_dir(directory)
             self.dir_var.set(directory)
+
+    def toggle_key_capture(self):
+        enabled = bool(self.check_key.get())
+        self.recorder.set_capture_on_keystroke(enabled)
 
     def update_sensitivity_lbl(self, value):
         sens = int(value)
