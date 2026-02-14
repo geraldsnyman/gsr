@@ -13,7 +13,7 @@ class ScreenRecorderApp(ctk.CTk):
         super().__init__()
 
         self.title("Simple Screen Recorder")
-        self.geometry("500x750")
+        self.geometry("500x700")
         
         # Grid Configuration
         self.grid_columnconfigure(0, weight=1)
@@ -161,20 +161,30 @@ class ScreenRecorderApp(ctk.CTk):
         # Bind left/right keys to adjust value
         def on_left(event):
             try:
-                # CTkSlider is float
                 val = slider.get() - step
-                if val < slider._from_: val = slider._from_
+                # Check bounds - attribute names vary by version/impl
+                min_val = getattr(slider, "_from_", 0)
+                if val < min_val: val = min_val
+                
                 slider.set(val)
                 command(val)
-            except: pass
+            except Exception as e:
+                print(f"Slider Left Error: {e}")
         
         def on_right(event):
             try:
                 val = slider.get() + step
-                if val > slider._to_: val = slider._to_
+                # Check bounds
+                max_val = getattr(slider, "_to", 100) # ctk uses _to usually
+                # Fallback check
+                if hasattr(slider, "_to_"): max_val = slider._to_
+                
+                if val > max_val: val = max_val
+                
                 slider.set(val)
                 command(val)
-            except: pass
+            except Exception as e:
+                print(f"Slider Right Error: {e}")
             
         slider.bind("<Left>", on_left)
         slider.bind("<Right>", on_right)
