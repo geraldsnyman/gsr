@@ -13,7 +13,7 @@ class ScreenRecorderApp(ctk.CTk):
         super().__init__()
 
         self.title("Simple Screen Recorder")
-        self.geometry("500x600")
+        self.geometry("500x750")
         
         # Grid Configuration
         self.grid_columnconfigure(0, weight=1)
@@ -103,6 +103,12 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_qual.set(100)
         self.slider_qual.grid(row=5, column=1, padx=10, pady=10, sticky="ew")
 
+        # Setup Keyboard Controls for Sliders
+        self._setup_slider_keys(self.slider_sens, self.update_sensitivity_lbl, step=1)
+        self._setup_slider_keys(self.slider_tile, self.update_tile_lbl, step=1) # Tile is index based
+        self._setup_slider_keys(self.slider_fps, self.update_fps_lbl, step=1)
+        self._setup_slider_keys(self.slider_qual, self.update_qual_lbl, step=1)
+
         # 7. Output Directory
         self.label_dir_title = ctk.CTkLabel(self.settings_frame, text="Output Folder:", width=140, anchor="w")
         self.label_dir_title.grid(row=6, column=0, padx=10, pady=(15,0), sticky="nw")
@@ -147,6 +153,37 @@ class ScreenRecorderApp(ctk.CTk):
         saved_name = os.path.basename(saved_dir) if saved_dir else "output"
         self.status_var.set(f"Saved {self.recorder.frame_count} frames to {saved_name}")
         self.label_status.configure(text_color="gray")
+
+    def _setup_slider_keys(self, slider, command, step=1):
+        # Allow slider to take focus on click
+        slider.bind("<Button-1>", lambda e: slider.focus_set())
+        
+        # Bind left/right keys to adjust value
+        def on_left(event):
+            try:
+                # CTkSlider is float
+                val = slider.get() - step
+                if val < slider._from_: val = slider._from_
+                slider.set(val)
+                command(val)
+            except: pass
+        
+        def on_right(event):
+            try:
+                val = slider.get() + step
+                if val > slider._to_: val = slider._to_
+                slider.set(val)
+                command(val)
+            except: pass
+            
+        slider.bind("<Left>", on_left)
+        slider.bind("<Right>", on_right)
+        
+        # Additional Binding for Canvas if widget doesn't catch it
+        if hasattr(slider, "_canvas"):
+             slider._canvas.bind("<Button-1>", lambda e: slider.focus_set())
+             slider._canvas.bind("<Left>", on_left)
+             slider._canvas.bind("<Right>", on_right)
 
     def select_directory(self):
         directory = filedialog.askdirectory(initialdir=self.recorder.output_dir)
