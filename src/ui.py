@@ -83,11 +83,11 @@ class ScreenRecorderApp(ctk.CTk):
         self.label_res.grid(row=0, column=0, columnspan=2, pady=(10, 5))
 
         # Sensitivity Slider
-        self.label_sens = ctk.CTkLabel(self.settings_frame, text="Sensitivity (50):", width=120, anchor="w")
+        self.label_sens = ctk.CTkLabel(self.settings_frame, text="Sensitivity (60):", width=120, anchor="w")
         self.label_sens.grid(row=1, column=0, padx=10, pady=10)
         
         self.slider_sens = ctk.CTkSlider(self.settings_frame, from_=0, to=100, command=self.update_sensitivity_lbl)
-        self.slider_sens.set(50) 
+        self.slider_sens.set(60) 
         self.slider_sens.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
         # Tile Size Slider (Doubling Steps)
@@ -101,11 +101,11 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_tile.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         # FPS Slider
-        self.label_fps = ctk.CTkLabel(self.settings_frame, text="FPS (10):", width=120, anchor="w")
+        self.label_fps = ctk.CTkLabel(self.settings_frame, text="FPS (20):", width=120, anchor="w")
         self.label_fps.grid(row=3, column=0, padx=10, pady=10)
         
         self.slider_fps = ctk.CTkSlider(self.settings_frame, from_=1, to=60, number_of_steps=59, command=self.update_fps_lbl)
-        self.slider_fps.set(10)
+        self.slider_fps.set(20)
         self.slider_fps.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
 
         # Quality Slider

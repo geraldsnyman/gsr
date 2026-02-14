@@ -18,8 +18,8 @@ class ScreenRecorder:
         self.recording_thread = None
         
         # Default settings
-        self.fps = 10
-        self.sensitivity = 50 
+        self.fps = 20
+        self.sensitivity = 60 
         self.quality = 100 
         self.tile_divisions = 1 # Number of tiles across width/height (1 = 1x1 grid)
         
