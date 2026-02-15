@@ -65,8 +65,8 @@ To achieve the best balance of performance (low CPU) and capture accuracy:
 
 3.  **Tune Sensitivity (Threshold)**:
     -   **Sensitivity Slider** controls the "Noise Gate".
-    -   **Higher Value (Right)** = Less Sensitive. Ignores small changes like cursor blinking or clock updates.
-    -   **Lower Value (Left)** = More Sensitive. Captures almost everything.
+    -   **Lower Value (Left)** = Less Sensitive. Ignores small changes like cursor blinking or clock updates.
+    -   **Higher Value (Right)** = More Sensitive. Captures almost everything.
     -   **Strategy**:
         -   Set Tile Size to **Large** (Left).
         -   Set Sensitivity to **Medium/High** (Center/Right).

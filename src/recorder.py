@@ -190,15 +190,26 @@ class ScreenRecorder:
                             grid_h = self.tile_divisions
                             
                             # Resize diff to grid size using AREA interpolation (averages pixels in the block)
-                            tiled_diff = cv2.resize(gray_diff, (grid_w, grid_h), interpolation=cv2.INTER_AREA)
+                            # Note: resizing uint8 to small grid averages values. Small changes (< 1.0 avg) become 0.
+                            # For high sensitivity, this averaging hides details.
                             
-                            # Check if ANY tile exceeds threshold
-                            score = np.max(tiled_diff)
-                            
-                            threshold = self._get_threshold()
-                            
-                            if score > threshold:
-                                should_save = True
+                            # Special handling for Max Sensitivity (100) or Single Tile
+                            if self.sensitivity == 100:
+                                # Captures single pixel changes regardless of tile size
+                                if cv2.countNonZero(gray_diff) > 0:
+                                    should_save = True
+                            else:
+                                if self.tile_divisions == 1:
+                                    # Use precise mean for full screen
+                                    score = cv2.mean(gray_diff)[0]
+                                else:
+                                    # Use grid approach
+                                    tiled_diff = cv2.resize(gray_diff, (grid_w, grid_h), interpolation=cv2.INTER_AREA)
+                                    score = np.max(tiled_diff)
+                                
+                                threshold = self._get_threshold()
+                                if score > threshold:
+                                    should_save = True
                             
                     if should_save:
                         # Save frame
