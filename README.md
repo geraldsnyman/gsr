@@ -48,5 +48,29 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     - **Output**: Select destination folder.
     - **Start/Stop**: Toggle recording.
 
+## Optimization Guide
+
+To achieve the best balance of performance (low CPU) and capture accuracy:
+
+1.  **Enable "Capture on Keystroke"**:
+    -   This is the most efficient way to capture typing. It triggers a frame save *only* when you press a key, bypassing the need for intense visual scanning.
+    -   With this on, you don't need small tiles to see text appear.
+
+2.  **Start with "Large Tiles" (Slider to Left)**:
+    -   Larger tiles (e.g., Full Screen or 960x540) require significantly less processing power than thousands of small tiles.
+    -   Use this setting by default. Only move the slider right (smaller tiles) if you need to catch small visual changes *that don't involve typing* (like a specific icon changing color).
+
+3.  **Tune Sensitivity (Threshold)**:
+    -   **Sensitivity Slider** controls the "Noise Gate".
+    -   **Higher Value (Right)** = Less Sensitive. Ignores small changes like cursor blinking or clock updates.
+    -   **Lower Value (Left)** = More Sensitive. Captures almost everything.
+    -   **Strategy**:
+        -   Set Tile Size to **Large** (Left).
+        -   Set Sensitivity to **Medium/High** (Center/Right).
+        -   If it's missing big window changes, lower the Sensitivity (Left).
+        -   If it's capturing too much (idle cursor blinking), increase Sensitivity (Right).
+
+**Summary**: Use **Keystroke Capture** + **Large Tiles** + **Medium Sensitivity** for the most efficient recording of work/coding sessions.
+
 ## License
 Freeware. Feel free to use and modify.
