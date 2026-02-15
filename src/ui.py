@@ -66,6 +66,12 @@ class ScreenRecorderApp(ctk.CTk):
         self.divisors = [n for n in common if (self.screen_w // n) >= min_tile_width]
         self.divisors.sort()
         
+        # Calculate default index for ~960px width
+        # target_div = screen_w / 960
+        target_width = 960
+        best_div = min(self.divisors, key=lambda x: abs((self.screen_w // x) - target_width))
+        default_index = self.divisors.index(best_div)
+
         num_steps = max(1, len(self.divisors) - 1)
 
         # Title
@@ -95,12 +101,18 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_sens.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
         # 3. Tile Size Slider
-        self.label_tile = ctk.CTkLabel(self.settings_frame, text=f"Tile Size ({self.screen_w}x{self.screen_h}):", width=140, anchor="w")
+        # Get initial tile dimensions for label
+        init_tw = self.screen_w // self.divisors[default_index]
+        init_th = self.screen_h // self.divisors[default_index]
+        self.label_tile = ctk.CTkLabel(self.settings_frame, text=f"Tile Size ({init_tw}x{init_th}):", width=140, anchor="w")
         self.label_tile.grid(row=2, column=0, padx=10, pady=10)
         
         self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=0, to=num_steps, number_of_steps=num_steps, command=self.update_tile_lbl)
-        self.slider_tile.set(num_steps) 
+        self.slider_tile.set(default_index) 
         self.slider_tile.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+        
+        # Set initial recorder value
+        self.recorder.set_tile_divisions(self.divisors[default_index])
 
         # 4. Key Capture Checkbox
         self.check_key = ctk.CTkCheckBox(self.settings_frame, text="Capture on Keystroke", command=self.toggle_key_capture)
