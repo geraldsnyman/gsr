@@ -17,18 +17,24 @@ This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
 - **Capture**: `mss` (High performance) + `OpenCV` (Diffing)
 - **Input**: `pynput` (Keystroke detection)
 
-## 2. Project Structure
+## 4. Project Structure
 ```
 /
 ├── README.md               # User documentation
 ├── requirements.txt        # Python dependencies
+├── setup.sh                # Automated installation script
+├── run.sh                  # Execution script
+├── setup_desktop.py        # Linux desktop entry generator
+├── config.json             # Persistent settings (auto-generated)
+├── assets/
+│   └── icon.png            # Application Icon
 ├── src/
+│   ├── __init__.py
 │   ├── main.py             # Entry point
-│   ├── ui.py               # GUI implementation
-│   ├── recorder.py         # Screen capture and processing logic
-│   └── utils.py            # Helper functions
+│   ├── ui.py               # GUI implementation (CustomTkinter)
+│   └── recorder.py         # Screen capture and processing logic
 └── docs/
-    ├── PROJECT_CHARTER.md  # High-level project definition
+    ├── PROJECT_CHARTER.md  # High-level project vision
     └── PROJECT_PLAN.md     # This file
 ```
 

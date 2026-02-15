@@ -39,11 +39,17 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
 
 ## Usage
 
-1.  **Run the application**:
+1.  **Run the application (GUI)**:
     ```bash
     ./run.sh
     ```
-2.  **Controls**:
+2.  **Run via CLI (No GUI)**:
+    ```bash
+    python3 src/main.py --cli
+    ```
+    *Useful for headless servers or automation.*
+
+3.  **Controls**:
     - **Sensitivity**: Threshold for motion detection (Higher = less sensitive).
     - **Tile Size**: Grid granularity. Defaults to ~960x540. Smaller tiles = more sensitive to tiny area changes.
         - *Tip: Use Arrow Keys (Left/Right) to fine-tune sliders.*
