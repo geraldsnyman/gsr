@@ -166,8 +166,29 @@ class ScreenRecorder:
                 try:
                     sct_img = sct.grab(monitor)
                     frame = np.array(sct_img)
-                    # Convert to BGR for OpenCV processing (mss returns BGRA)
-                    frame_bgr = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+                    
+                    # Handle Transparency / Garbage Colors
+                    # MSS returns BGRA. Some Linux compositors leave "magic purple" (255,0,255) 
+                    # in the RGB channels of fully, transparent pixels (Alpha=0).
+                    # Simple conversion to BGR reveals this purple bar.
+                    # Fix: Mask out pixels where Alpha is 0 (or low).
+                    
+                    if frame.shape[2] == 4:
+                        # Split channels
+                        b, g, r, a = cv2.split(frame)
+                        
+                        # Create a mask where alpha is valid (e.g. > 0)
+                        # We can simply multiply B,G,R by the normalized Alpha, 
+                        # OR just set BGR to 0 where Alpha is 0.
+                        # Setting to 0 (Black) is faster and safer for "recording".
+                        
+                        # Fast operation: use numpy boolean indexing or bitwise
+                        # But simplest openCV way:
+                        frame_bgr = cv2.merge((b, g, r))
+                        # Black out transparent pixels
+                        frame_bgr[a == 0] = 0
+                    else:
+                        frame_bgr = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
                     
                     should_save = False
                     
