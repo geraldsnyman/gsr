@@ -1,4 +1,3 @@
-
 import os
 import time
 import threading
@@ -6,12 +5,16 @@ import datetime
 import cv2
 import mss
 import numpy as np
+import json
 from PIL import Image
 from pynput import keyboard
 
 class ScreenRecorder:
     def __init__(self, output_dir="recordings"):
-        self.output_dir = output_dir
+        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.output_dir = os.path.join(self.base_dir, output_dir)
+        self.config_file = os.path.join(self.base_dir, "config.json")
+        
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
@@ -23,15 +26,45 @@ class ScreenRecorder:
         self.fps = 10
         self.sensitivity = 50 
         self.quality = 100 
-        self.tile_divisions = 1 # Number of tiles across width/height (1 = 1x1 grid)
+        self.tile_divisions = 1 
         self.capture_on_keystroke = False
         self.key_pressed = False
         
         self.current_session_dir = None
         self.frame_count = 0
-        # self.sct will be initialized in the thread to avoid X11 threading issues
         self.monitor_index = 1 
         self._resolution = self.get_screen_resolution()
+        
+        self.load_settings()
+
+    def load_settings(self):
+        if os.path.exists(self.config_file):
+            try:
+                with open(self.config_file, 'r') as f:
+                    data = json.load(f)
+                    self.fps = data.get("fps", self.fps)
+                    self.sensitivity = data.get("sensitivity", self.sensitivity)
+                    self.quality = data.get("quality", self.quality)
+                    self.tile_divisions = data.get("tile_divisions", self.tile_divisions)
+                    self.capture_on_keystroke = data.get("capture_on_keystroke", self.capture_on_keystroke)
+                    self.output_dir = data.get("output_dir", self.output_dir)
+            except Exception as e:
+                print(f"Error loading config: {e}")
+
+    def save_settings(self):
+        data = {
+            "fps": self.fps,
+            "sensitivity": self.sensitivity,
+            "quality": self.quality,
+            "tile_divisions": self.tile_divisions,
+            "capture_on_keystroke": self.capture_on_keystroke,
+            "output_dir": self.output_dir
+        }
+        try:
+            with open(self.config_file, 'w') as f:
+                json.dump(data, f, indent=4)
+        except Exception as e:
+            print(f"Error saving config: {e}")
 
     def get_screen_resolution(self):
         with mss.mss() as sct:

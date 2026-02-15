@@ -93,45 +93,51 @@ class ScreenRecorderApp(ctk.CTk):
         self.label_res.grid(row=0, column=0, columnspan=2, pady=(5, 10))
 
         # 2. Sensitivity Slider
-        self.label_sens = ctk.CTkLabel(self.settings_frame, text="Sensitivity (50):", width=140, anchor="w")
+        self.label_sens = ctk.CTkLabel(self.settings_frame, text=f"Sensitivity ({self.recorder.sensitivity}):", width=140, anchor="w")
         self.label_sens.grid(row=1, column=0, padx=10, pady=10)
         
         self.slider_sens = ctk.CTkSlider(self.settings_frame, from_=0, to=100, command=self.update_sensitivity_lbl)
-        self.slider_sens.set(50) 
+        self.slider_sens.set(self.recorder.sensitivity) 
         self.slider_sens.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
         # 3. Tile Size Slider
-        # Get initial tile dimensions for label
-        init_tw = self.screen_w // self.divisors[default_index]
-        init_th = self.screen_h // self.divisors[default_index]
+        # Find index for current tile_divisions
+        current_index = 0
+        if self.recorder.tile_divisions in self.divisors:
+            current_index = self.divisors.index(self.recorder.tile_divisions)
+        else:
+            # Fallback if config has invalid value
+            current_index = default_index
+            self.recorder.set_tile_divisions(self.divisors[current_index])
+
+        init_tw, init_th = self.recorder.get_tile_resolution()
         self.label_tile = ctk.CTkLabel(self.settings_frame, text=f"Tile Size ({init_tw}x{init_th}):", width=140, anchor="w")
         self.label_tile.grid(row=2, column=0, padx=10, pady=10)
         
         self.slider_tile = ctk.CTkSlider(self.settings_frame, from_=0, to=num_steps, number_of_steps=num_steps, command=self.update_tile_lbl)
-        self.slider_tile.set(default_index) 
+        self.slider_tile.set(current_index) 
         self.slider_tile.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
         
-        # Set initial recorder value
-        self.recorder.set_tile_divisions(self.divisors[default_index])
-
         # 4. Key Capture Checkbox
         self.check_key = ctk.CTkCheckBox(self.settings_frame, text="Capture on Keystroke", command=self.toggle_key_capture)
+        if self.recorder.capture_on_keystroke:
+            self.check_key.select()
         self.check_key.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
         # 5. FPS Slider
-        self.label_fps = ctk.CTkLabel(self.settings_frame, text="FPS (10):", width=140, anchor="w")
+        self.label_fps = ctk.CTkLabel(self.settings_frame, text=f"FPS ({self.recorder.fps}):", width=140, anchor="w")
         self.label_fps.grid(row=4, column=0, padx=10, pady=10)
         
         self.slider_fps = ctk.CTkSlider(self.settings_frame, from_=1, to=60, number_of_steps=59, command=self.update_fps_lbl)
-        self.slider_fps.set(10)
+        self.slider_fps.set(self.recorder.fps)
         self.slider_fps.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
         # 6. Quality Slider
-        self.label_qual = ctk.CTkLabel(self.settings_frame, text="Quality (100%):", width=140, anchor="w")
+        self.label_qual = ctk.CTkLabel(self.settings_frame, text=f"Quality ({self.recorder.quality}%):", width=140, anchor="w")
         self.label_qual.grid(row=5, column=0, padx=10, pady=10)
         
         self.slider_qual = ctk.CTkSlider(self.settings_frame, from_=1, to=100, number_of_steps=99, command=self.update_qual_lbl)
-        self.slider_qual.set(100)
+        self.slider_qual.set(self.recorder.quality)
         self.slider_qual.grid(row=5, column=1, padx=10, pady=10, sticky="ew")
 
         # Setup Keyboard Controls for Sliders
@@ -161,6 +167,7 @@ class ScreenRecorderApp(ctk.CTk):
     def on_closing(self):
         if self.is_recording:
             self.stop_recording()
+        self.recorder.save_settings()
         self.quit()
 
     def toggle_recording(self):
