@@ -1,15 +1,21 @@
+# Simple Screen Recorder Project Plan
 
-# Project Plan: Simple Screen Recorder
+## 1. Objective: The 4K Multi-Track Workflow
+This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
+- **The Concept**: Record the entire 4K desktop containing up to 4 full 1080p application windows (e.g., IDE, Browser, Terminal, Preview) simultaneously.
+- **The Goal**: In post-production (e.g., DaVinci Resolve), the single 4K video source is duplicated into multiple tracks, each cropped to a specific 1080p region. This allows the editor to switch views (virtual multi-cam) between applications instantly without having to switch windows during the actual recording session.
+- **Why**: This ensures no context is ever lost. Example: An edit in the IDE (View 1) causes an immediate update in the Browser (View 2). Both are captured perfectly in sync.
 
-## Overview.
-This document outlines the development plan for the Simple Screen Recorder application. It will be maintained continuously to reflect the project's status, tech stack, and roadmap.
+## 2. Core Philosophy
+- **Resolution is King**: Primary output is high-bitrate, full-resolution JPEG sequences to ensure 1080p crops remain sharp.
+- **Smart Efficiency**: Since recording full 4K at 60fps is data-heavy, we use **Smart Sensitivity** and **Keystroke Triggers** to only save frames when content actually changes.
+- **Silent Reliability**: The recorder runs unobtrusively, ensuring that the "Purple Bar" or other artifacts do not ruin the clean capture of the workspace.
 
-## 1. Technology Stack
+## 3. Technology Stack
 - **Language**: Python 3.10+
-- **GUI Framework**: CustomTkinter (Modern, dark-mode ready).
-- **Screen Capture**: `mss` (Fast, cross-platform).
-- **Image Processing**: `OpenCV` (for diffing/sensitivity) + `Pillow` (for saving).
-- **Data Handling**: `numpy` (efficient array operations).
+- **GUI**: CustomTkinter
+- **Capture**: `mss` (High performance) + `OpenCV` (Diffing)
+- **Input**: `pynput` (Keystroke detection)
 
 ## 2. Project Structure
 ```

@@ -1,18 +1,23 @@
 
-# Project Charter: Simple Screen Recorder
+# Project Charter: The Virtual Multi-Cam Recorder
 
-## Project Title
-Simple Screen Recorder
+## The Vision
+To empower technical content creators with a tool that captures the **entire workspace context** at once. 
+Instead of constantly switching scenes in OBS or sharing single windows, the creator records their **full 4K canvas** containing up to four 1080p applications (e.g., Code, Browser, Terminal, Live Preview).
 
-## Problem Statement
-There is a need for a lightweight, simple tool to capture screen activity as a sequence of images (.jpg) rather than a video file. This allows for flexible post-production (e.g., in DaVinci Resolve) where playback rate can be determined later. Existing tools often focus on video output or lack specific features like sensitivity-based capture.
+The magic happens in **Post-Production** (e.g., DaVinci Resolve):
+1.  Import the single high-res Image Sequence.
+2.  Duplicate the track 4 times.
+3.  Crop each track to a specific application quadrant.
+4.  Switch between these "angles" instantly.
 
-## Objectives
-- Develop a Python-based desktop application.
-- Capture screen content and save as a sequence of .jpg images.
-- Implement "sensitivity" adjustment to minimize storage by only saving frames with significant changes.
-- Allow user-configurable capture frame rate.
-- Ensure the application is performant and easy to use.
+## The Problem
+Screen recording software often forces a choice:
+- **Record EVERYTHING**: The viewer sees tiny text on a 4K screen.
+- **Record ONE Window**: The viewer misses context updates happening in other windows (e.g., a browser refresh triggered by code save).
+
+## The Solution
+**Simple Screen Recorder** captures the full resolution but optimizes storage using smart change detection (Sensitivity + Keystrokes). It delivers a "Master Tape" of your entire session, from which any specific "Camera Angle" (Application View) can be extracted in perfect 1080p clarity later.
 
 ## Scope
 ### In-Scope

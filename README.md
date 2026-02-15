@@ -1,7 +1,9 @@
 
 # Simple Screen Recorder
 
-A lightweight tool to capture screen activity as a sequence of high-quality JPEG images. Designed for creating coding tutorials, timelapses, and security monitoring where playback speed is determined in post-production.
+A tool to capture your **Full 4K Desktop** as a smart sequence of high-quality JPEG images. 
+
+Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 applications (Code, Browser, Terminal, Live Preview) simultaneously on a 4K screen. In post-production (e.g., DaVinci Resolve), crop this single 4K master into multiple 1080p tracks to create a dynamic "multi-cam" editing experience without ever switching windows during recording.
 
 ## Features
 - **Efficient Capture**: Only saves frames when significant change is detected.
