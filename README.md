@@ -17,15 +17,18 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     cd ScreenRecorder
     ```
 
-    *Optional: Initialize Git to track your changes:*
-    ```bash
-    git init
+## Installation
+
 1.  Clone the repository.
-2.  Install dependencies:
+2.  Run the automated setup script:
     ```bash
-    pip install -r requirements.txt
+    ./setup.sh
     ```
-    *Note: On Linux, ensure `python3-tk` is installed.*
+    *This script will:*
+    - *Install necessary system dependencies (like `python3-tk`).*
+    - *Create a Python virtual environment.*
+    - *Install all required Python libraries from `requirements.txt`.*
+
 3.  (Optional) Install Desktop Entry (Linux):
     ```bash
     python3 setup_desktop.py
@@ -33,7 +36,7 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
 
 ## Usage
 
-1.  Run the application:
+1.  **Run the application**:
     ```bash
     ./run.sh
     ```
