@@ -17,10 +17,7 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     cd ScreenRecorder
     ```
 
-## Installation
-
-1.  Clone the repository.
-2.  Run the automated setup script:
+2.  **Run the automated setup script**:
     ```bash
     ./setup.sh
     ```
@@ -29,10 +26,11 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     - *Create a Python virtual environment.*
     - *Install all required Python libraries from `requirements.txt`.*
 
-3.  (Optional) Install Desktop Entry (Linux):
+3.  **(Optional) Install Desktop Entry (Linux)**:
     ```bash
     python3 setup_desktop.py
     ```
+    *This allows you to find "Simple Screen Recorder" in your system's application menu and ensures the taskbar icon displays correctly.*
 
 ## Usage
 
