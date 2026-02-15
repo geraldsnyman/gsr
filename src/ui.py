@@ -10,12 +10,11 @@ ctk.set_default_color_theme("blue")
 
 class ScreenRecorderApp(ctk.CTk):
     def __init__(self):
-        # Setting className helps Linux window managers identify the app separately from generic "Tk"
-        # However, to get "Screen Recorder" properly in the taskbar, we need to be careful.
-        # Let's rely on wm call to set class explicitly.
-        super().__init__()
+        # Setting className sets the WM_CLASS.
+        # This is essential for the desktop entry we will create to match this window.
+        super().__init__(className="SimpleScreenRecorder")
 
-        self.title("Screen Recorder")
+        self.title("Simple Screen Recorder")
         self.geometry("500x650")
         
         # Set Icon
@@ -25,21 +24,13 @@ class ScreenRecorderApp(ctk.CTk):
             icon_path = os.path.join(base_dir, "assets", "icon.png")
             
             if os.path.exists(icon_path):
-                icon_image = Image.open(icon_path)
-                self.icon_photo = ImageTk.PhotoImage(icon_image)
-                self.iconphoto(True, self.icon_photo)
-                # Force X11 icon update if possible
+                img = Image.open(icon_path)
+                self.icon_photo = ImageTk.PhotoImage(img) # Keep reference!
+                self.wm_iconphoto(True, self.icon_photo)
+                # Setting wm_image explicitly for some X11 WMs
                 self.call('wm', 'iconphoto', self._w, self.icon_photo)
             else:
                 print(f"Icon not found at: {icon_path}")
-
-            # Set WM_CLASS to "ScreenRecorder" (Instance, Class)
-            # This helps GNOME group it and display a cleaner name than "tk"
-            # Note: Spaces in WM_CLASS are discouraged/often handled poorly by docks.
-            # We use "ScreenRecorder" (CamelCase) which usually displays nicely or falls back to Title.
-            # To get "Screen Recorder" with space, we might rely on the Title.
-            self.call('wm', 'group', '.', '.') 
-            self.call('wm', 'client', '.', 'ScreenRecorder') 
         except Exception as e:
             print(f"Could not load icon: {e}")
 
