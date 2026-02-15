@@ -20,43 +20,32 @@ A lightweight tool to capture screen activity as a sequence of high-quality JPEG
     *Optional: Initialize Git to track your changes:*
     ```bash
     git init
-    git add .
-    git commit -m "Initial setup"
-    ```
-
-2.  **Set up a virtual environment** (recommended):
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-
-3.  **Install system dependencies** (Linux only):
-    ```bash
-    sudo apt-get install python3-tk python3-dev scrot -y
-    # Or for Fedora: sudo dnf install python3-tkinter
-    ```
-
-4.  **Install dependencies**:
+1.  Clone the repository.
+2.  Install dependencies:
     ```bash
     pip install -r requirements.txt
+    ```
+    *Note: On Linux, ensure `python3-tk` is installed.*
+3.  (Optional) Install Desktop Entry (Linux):
+    ```bash
+    python3 setup_desktop.py
     ```
 
 ## Usage
 
-1.  **Run the application**:
+1.  Run the application:
     ```bash
-    python src/main.py
+    ./run.sh
     ```
-
 2.  **Controls**:
-    - **FPS**: Adjust the slider to set capture frequency.
-    - **Sensitivity**: Adjust the threshold for motion detection.
-    - **Tile Size**: Adjust the grid size for detection.
-    - **Capture on Keystroke**: Force capture a frame whenever a key is pressed (useful for typing).
-    - **Quality**: Adjust the JPEG compression quality (1-100, default 100).
-    - **Output**: Browse and select the destination folder for recordings.
-    - **Start Recording**: Begins capturing the screen.
-    - **Stop Recording**: Stops capture and saves the sequence in a timestamped folder.
+    - **Sensitivity**: Threshold for motion detection (Higher = less sensitive).
+    - **Tile Size**: Grid granularity. Defaults to ~960x540. Smaller tiles = more sensitive to tiny area changes.
+        - *Tip: Use Arrow Keys (Left/Right) to fine-tune sliders.*
+    - **Capture on Keystroke**: Force capture a frame whenever a key is pressed (ideal for typing).
+    - **FPS**: Maximum capture frequency.
+    - **Quality**: JPEG compression quality.
+    - **Output**: Select destination folder.
+    - **Start/Stop**: Toggle recording.
 
 ## License
 Freeware. Feel free to use and modify.

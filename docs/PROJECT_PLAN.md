@@ -55,21 +55,28 @@ This document outlines the development plan for the Simple Screen Recorder appli
 - UI to browse and select output folder.
 - Displays current path.
 
-### H. Grid-Based Sensitivity (Tile Size)
+### H. Grid-Based Sensitivity (Tile Size) [Completed]
 - Adjustable grid granularity.
-- Granular control from Full Screen down to ~48px tiles for detecting minute changes.
+- Granular control from Full Screen down to ~16px tiles.
 - Automatic calibration based on screen resolution.
+- **Optimization**: Defaults to ~960x540 tile size for balanced performance.
 
-### I. Input-Triggered Capture
+### I. Input-Triggered Capture [Completed]
 - "Capture on Keystroke" option.
 - Bypasses sensitivity threshold when keys are pressed, ensuring text entry is never missed.
+
+### J. Linux Desktop Integration [Completed]
+- Custom application icon.
+- `setup_desktop.py` script to generate `.desktop` file for system integration.
+- Proper Window Manager identity (WM_CLASS).
 
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.
-- [x] **Phase 2: UI Implementation** - Create the settings window and controls.
-- [x] **Phase 3: Integration** - Connect UI to logic.
-- [x] **Phase 3.5: Enhancements** - Git setup, Compression settings, Threading fixes.
+- [x] **Phase 2: Basic UI** - CTk interface for controls.
+- [x] **Phase 3: Optimization** - Configurable FPS, Sensitivity, Quality.
+- [x] **Phase 4: Advanced Features** - Smart Sensitivity (Tile Size), Keystroke Trigger.
+- [x] **Phase 5: Refinement** - UI Polish (Scrollable), Keyboard Constraints, Linux Integration.
 - [ ] **Phase 4: Testing & Polish** - Verify performance and UX.
 
 ## 5. Documentation Tasks
