@@ -10,18 +10,27 @@ ctk.set_default_color_theme("blue")
 
 class ScreenRecorderApp(ctk.CTk):
     def __init__(self):
-        super().__init__()
+        # Setting className helps Linux window managers identify the app separately from generic "Tk"
+        super().__init__(className="SimpleScreenRecorder")
 
-        self.title("Screen Recorder")
+        self.title("Simple Screen Recorder")
         self.geometry("500x650")
         
         # Set Icon
         try:
-            icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "icon.png")
+            # Go up one level from src to finding assets
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            icon_path = os.path.join(base_dir, "assets", "icon.png")
+            
+            # Load icon
             img = tk.PhotoImage(file=icon_path)
-            self.iconphoto(False, img)
-            # Linux specific: Set WM_CLASS to show proper name in taskbar
-            self.attributes('-type', 'dialog') # Sometimes helps
+            # True = apply to all future windows of this app
+            self.iconphoto(True, img)
+            
+            # Linux proper taskbar naming requires consistent WM_CLASS
+            # The className arg in __init__ handles the instance name.
+            # We can also explicitly set the class string if needed:
+            # self.call('wm', 'group', '.', '.') 
         except Exception as e:
             print(f"Could not load icon: {e}")
 
