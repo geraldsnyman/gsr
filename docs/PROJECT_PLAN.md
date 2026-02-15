@@ -70,13 +70,17 @@ This document outlines the development plan for the Simple Screen Recorder appli
 - `setup_desktop.py` script to generate `.desktop` file for system integration.
 - Proper Window Manager identity (WM_CLASS).
 
+### K. Persistent Settings [Completed]
+- Auto-save configuration (FPS, Sensitivity, Tile Size, etc.) to `config.json` on exit.
+- Auto-load settings on startup.
+
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.
 - [x] **Phase 2: Basic UI** - CTk interface for controls.
 - [x] **Phase 3: Optimization** - Configurable FPS, Sensitivity, Quality.
 - [x] **Phase 4: Advanced Features** - Smart Sensitivity (Tile Size), Keystroke Trigger.
-- [x] **Phase 5: Refinement** - UI Polish (Scrollable), Keyboard Constraints, Linux Integration.
+- [x] **Phase 5: Refinement** - UI Polish (Scrollable), Linux Integration, Persistent Settings.
 - [ ] **Phase 4: Testing & Polish** - Verify performance and UX.
 
 ## 5. Documentation Tasks

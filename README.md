@@ -4,10 +4,13 @@
 A lightweight tool to capture screen activity as a sequence of high-quality JPEG images. Designed for creating coding tutorials, timelapses, and security monitoring where playback speed is determined in post-production.
 
 ## Features
-- **Image Sequence Output**: Saves captures as .jpg files for easy import into video editors (e.g., DaVinci Resolve).
-- **Adjustable Sensitivity**: Only captures frames when significant changes occur, saving disk space.
-- **Configurable Frame Rate**: Set your desired capture frequency.
-- **Modern UI**: Clean, dark-mode interface.
+- **Efficient Capture**: Only saves frames when significant change is detected.
+- **Smart Sensitivity**: Grid-based detection (Tile Size) allows capturing small changes (like cursors) or ignoring them.
+- **Keystroke Trigger**: Option to force capture when typing, ensuring no text is missed.
+- **Adjustable Quality**: JPEG compression control to save space.
+- **Persistant Settings**: Automatically saves and loads your configuration.
+- **Modern UI**: Dark-themed, scrollable interface with keyboard support for sliders.
+- **Linux Integration**: Includes desktop entry setup for system menu integration.
 
 ## Installation
 
