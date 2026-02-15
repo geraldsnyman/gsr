@@ -18,19 +18,13 @@ class ScreenRecorderApp(ctk.CTk):
         
         # Set Icon
         try:
-            # Go up one level from src to finding assets
+            from PIL import Image, ImageTk
             base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             icon_path = os.path.join(base_dir, "assets", "icon.png")
             
-            # Load icon
-            img = tk.PhotoImage(file=icon_path)
-            # True = apply to all future windows of this app
-            self.iconphoto(True, img)
-            
-            # Linux proper taskbar naming requires consistent WM_CLASS
-            # The className arg in __init__ handles the instance name.
-            # We can also explicitly set the class string if needed:
-            # self.call('wm', 'group', '.', '.') 
+            icon_image = Image.open(icon_path)
+            self.icon_photo = ImageTk.PhotoImage(icon_image)
+            self.iconphoto(True, self.icon_photo)
         except Exception as e:
             print(f"Could not load icon: {e}")
 
