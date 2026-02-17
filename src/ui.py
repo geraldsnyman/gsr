@@ -140,22 +140,43 @@ class ScreenRecorderApp(ctk.CTk):
         self.slider_qual.set(self.recorder.quality)
         self.slider_qual.grid(row=5, column=1, padx=10, pady=10, sticky="ew")
 
+        # 7. Mouse Triggers Section
+        self.label_mouse = ctk.CTkLabel(self.settings_frame, text="Mouse Triggers:", width=140, anchor="w", font=("Roboto", 14, "bold"))
+        self.label_mouse.grid(row=6, column=0, padx=10, pady=(15, 5), sticky="w")
+
+        # Mouse Checkboxes
+        self.check_click = ctk.CTkCheckBox(self.settings_frame, text="On Click", command=self.toggle_mouse_click)
+        if self.recorder.capture_mouse_click: self.check_click.select()
+        self.check_click.grid(row=7, column=0, padx=10, pady=5, sticky="w")
+
+        self.check_scroll = ctk.CTkCheckBox(self.settings_frame, text="On Scroll", command=self.toggle_mouse_scroll)
+        if self.recorder.capture_mouse_scroll: self.check_scroll.select()
+        self.check_scroll.grid(row=7, column=1, padx=10, pady=5, sticky="w")
+
+        self.check_move = ctk.CTkCheckBox(self.settings_frame, text="On Move (Heavy!)", command=self.toggle_mouse_move)
+        if self.recorder.capture_mouse_move: self.check_move.select()
+        self.check_move.grid(row=8, column=0, padx=10, pady=5, sticky="w")
+
+        self.check_cursor = ctk.CTkCheckBox(self.settings_frame, text="Show Cursor Overlay", command=self.toggle_show_cursor)
+        if self.recorder.show_cursor: self.check_cursor.select()
+        self.check_cursor.grid(row=8, column=1, padx=10, pady=5, sticky="w")
+
         # Setup Keyboard Controls for Sliders
         self._setup_slider_keys(self.slider_sens, self.update_sensitivity_lbl, step=1)
         self._setup_slider_keys(self.slider_tile, self.update_tile_lbl, step=1) # Tile is index based
         self._setup_slider_keys(self.slider_fps, self.update_fps_lbl, step=1)
         self._setup_slider_keys(self.slider_qual, self.update_qual_lbl, step=1)
 
-        # 7. Output Directory
+        # 8. Output Directory
         self.label_dir_title = ctk.CTkLabel(self.settings_frame, text="Output Folder:", width=140, anchor="w")
-        self.label_dir_title.grid(row=6, column=0, padx=10, pady=(15,0), sticky="nw")
+        self.label_dir_title.grid(row=9, column=0, padx=10, pady=(15,0), sticky="nw")
 
         self.dir_var = tk.StringVar(value=os.path.abspath(self.recorder.output_dir))
         self.label_dir_path = ctk.CTkLabel(self.settings_frame, textvariable=self.dir_var, text_color="gray", wraplength=250, justify="left")
-        self.label_dir_path.grid(row=6, column=1, padx=10, pady=(15,0), sticky="w")
+        self.label_dir_path.grid(row=9, column=1, padx=10, pady=(15,0), sticky="w")
         
         self.btn_dir = ctk.CTkButton(self.settings_frame, text="Browse...", width=100, command=self.select_directory)
-        self.btn_dir.grid(row=7, column=1, padx=10, pady=10, sticky="e")
+        self.btn_dir.grid(row=10, column=1, padx=10, pady=10, sticky="e")
 
         # Controls (Outside Scroll Frame)
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=50, font=("Roboto", 16, "bold"))
@@ -242,6 +263,23 @@ class ScreenRecorderApp(ctk.CTk):
     def toggle_key_capture(self):
         enabled = bool(self.check_key.get())
         self.recorder.set_capture_on_keystroke(enabled)
+        self.recorder.save_settings()
+
+    def toggle_mouse_click(self):
+        self.recorder.capture_mouse_click = bool(self.check_click.get())
+        self.recorder.save_settings()
+
+    def toggle_mouse_scroll(self):
+        self.recorder.capture_mouse_scroll = bool(self.check_scroll.get())
+        self.recorder.save_settings()
+
+    def toggle_mouse_move(self):
+        self.recorder.capture_mouse_move = bool(self.check_move.get())
+        self.recorder.save_settings()
+
+    def toggle_show_cursor(self):
+        self.recorder.show_cursor = bool(self.check_cursor.get())
+        self.recorder.save_settings()
 
     def update_sensitivity_lbl(self, value):
         sens = int(value)

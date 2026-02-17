@@ -4,5 +4,9 @@
     "quality": 80,
     "tile_divisions": 16,
     "capture_on_keystroke": true,
-    "output_dir": "/media/gerald/Projects/GitHub/ScreenRecorder/recordings"
+    "output_dir": "/media/gerald/Projects/GitHub/ScreenRecorder/recordings",
+    "capture_mouse_click": false,
+    "capture_mouse_scroll": false,
+    "capture_mouse_move": false,
+    "show_cursor": false
 }
