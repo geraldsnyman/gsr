@@ -15,7 +15,7 @@ class ScreenRecorderApp(ctk.CTk):
         super().__init__(className="SimpleScreenRecorder")
 
         self.title("Simple Screen Recorder")
-        self.geometry("500x650")
+        self.geometry("500x750")
         
         # Set Icon
         try:
@@ -144,39 +144,51 @@ class ScreenRecorderApp(ctk.CTk):
         self.label_mouse = ctk.CTkLabel(self.settings_frame, text="Mouse Triggers:", width=140, anchor="w", font=("Roboto", 14, "bold"))
         self.label_mouse.grid(row=6, column=0, padx=10, pady=(15, 5), sticky="w")
 
-        # Mouse Checkboxes
-        self.check_click = ctk.CTkCheckBox(self.settings_frame, text="On Click", command=self.toggle_mouse_click)
+        # Mouse Checkboxes (Compact Grid)
+        self.check_click = ctk.CTkCheckBox(self.settings_frame, text="Click", command=self.toggle_mouse_click, width=60)
         if self.recorder.capture_mouse_click: self.check_click.select()
         self.check_click.grid(row=7, column=0, padx=10, pady=5, sticky="w")
 
-        self.check_scroll = ctk.CTkCheckBox(self.settings_frame, text="On Scroll", command=self.toggle_mouse_scroll)
+        self.check_scroll = ctk.CTkCheckBox(self.settings_frame, text="Scroll", command=self.toggle_mouse_scroll, width=60)
         if self.recorder.capture_mouse_scroll: self.check_scroll.select()
         self.check_scroll.grid(row=7, column=1, padx=10, pady=5, sticky="w")
 
-        self.check_move = ctk.CTkCheckBox(self.settings_frame, text="On Move (Heavy!)", command=self.toggle_mouse_move)
+        self.check_move = ctk.CTkCheckBox(self.settings_frame, text="Move (Heavy)", command=self.toggle_mouse_move)
         if self.recorder.capture_mouse_move: self.check_move.select()
         self.check_move.grid(row=8, column=0, padx=10, pady=5, sticky="w")
 
-        self.check_cursor = ctk.CTkCheckBox(self.settings_frame, text="Show Cursor Overlay", command=self.toggle_show_cursor)
+        self.check_cursor = ctk.CTkCheckBox(self.settings_frame, text="Overlay Cursor", command=self.toggle_show_cursor)
         if self.recorder.show_cursor: self.check_cursor.select()
         self.check_cursor.grid(row=8, column=1, padx=10, pady=5, sticky="w")
+        
+        # Cursor Style & Size
+        self.label_csize = ctk.CTkLabel(self.settings_frame, text=f"Size ({self.recorder.cursor_size}):", width=60, anchor="w")
+        self.label_csize.grid(row=9, column=0, padx=10, pady=5, sticky="w")
+        
+        self.slider_csize = ctk.CTkSlider(self.settings_frame, from_=5, to=50, number_of_steps=45, command=self.update_csize_lbl)
+        self.slider_csize.set(self.recorder.cursor_size)
+        self.slider_csize.grid(row=9, column=1, padx=10, pady=5, sticky="ew")
+        
+        self.label_cstyle = ctk.CTkLabel(self.settings_frame, text="Style:", width=60, anchor="w")
+        self.label_cstyle.grid(row=10, column=0, padx=10, pady=5, sticky="w")
+        
+        self.seg_cstyle = ctk.CTkSegmentedButton(self.settings_frame, values=["dot", "target", "pointer"], command=self.update_cstyle)
+        self.seg_cstyle.set(self.recorder.cursor_style)
+        self.seg_cstyle.grid(row=10, column=1, padx=10, pady=5, sticky="ew")
 
-        # Setup Keyboard Controls for Sliders
-        self._setup_slider_keys(self.slider_sens, self.update_sensitivity_lbl, step=1)
-        self._setup_slider_keys(self.slider_tile, self.update_tile_lbl, step=1) # Tile is index based
-        self._setup_slider_keys(self.slider_fps, self.update_fps_lbl, step=1)
-        self._setup_slider_keys(self.slider_qual, self.update_qual_lbl, step=1)
+        # Setup Keyboard Controls for New Slider
+        self._setup_slider_keys(self.slider_csize, self.update_csize_lbl, step=1)
 
         # 8. Output Directory
         self.label_dir_title = ctk.CTkLabel(self.settings_frame, text="Output Folder:", width=140, anchor="w")
-        self.label_dir_title.grid(row=9, column=0, padx=10, pady=(15,0), sticky="nw")
+        self.label_dir_title.grid(row=11, column=0, padx=10, pady=(15,0), sticky="nw")
 
         self.dir_var = tk.StringVar(value=os.path.abspath(self.recorder.output_dir))
         self.label_dir_path = ctk.CTkLabel(self.settings_frame, textvariable=self.dir_var, text_color="gray", wraplength=250, justify="left")
-        self.label_dir_path.grid(row=9, column=1, padx=10, pady=(15,0), sticky="w")
+        self.label_dir_path.grid(row=11, column=1, padx=10, pady=(15,0), sticky="w")
         
         self.btn_dir = ctk.CTkButton(self.settings_frame, text="Browse...", width=100, command=self.select_directory)
-        self.btn_dir.grid(row=10, column=1, padx=10, pady=10, sticky="e")
+        self.btn_dir.grid(row=12, column=1, padx=10, pady=10, sticky="e")
 
         # Controls (Outside Scroll Frame)
         self.btn_record = ctk.CTkButton(self, text="START RECORDING", command=self.toggle_recording, fg_color="#2CC985", hover_color="#229966", height=50, font=("Roboto", 16, "bold"))
@@ -305,6 +317,16 @@ class ScreenRecorderApp(ctk.CTk):
         qual = int(value)
         self.label_qual.configure(text=f"Quality ({qual}%):")
         self.recorder.set_quality(qual)
+
+    def update_csize_lbl(self, value):
+        size = int(value)
+        self.label_csize.configure(text=f"Size ({size}):")
+        self.recorder.cursor_size = size
+        self.recorder.save_settings()
+
+    def update_cstyle(self, value):
+        self.recorder.cursor_style = value
+        self.recorder.save_settings()
 
 if __name__ == "__main__":
     app = ScreenRecorderApp()

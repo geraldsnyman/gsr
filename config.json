@@ -1,12 +1,12 @@
 {
-    "fps": 25,
+    "fps": 10,
     "sensitivity": 95,
     "quality": 80,
-    "tile_divisions": 16,
+    "tile_divisions": 30,
     "capture_on_keystroke": true,
     "output_dir": "/media/gerald/Projects/GitHub/ScreenRecorder/recordings",
-    "capture_mouse_click": false,
-    "capture_mouse_scroll": false,
-    "capture_mouse_move": false,
-    "show_cursor": false
+    "capture_mouse_click": true,
+    "capture_mouse_scroll": true,
+    "capture_mouse_move": true,
+    "show_cursor": true
 }

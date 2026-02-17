@@ -36,6 +36,8 @@ class ScreenRecorder:
         self.capture_mouse_scroll = False
         self.capture_mouse_move = False
         self.show_cursor = False
+        self.cursor_size = 10
+        self.cursor_style = "dot" # dot, target, pointer
         
         self.key_pressed = False
         self.mouse_triggered = False
@@ -65,6 +67,8 @@ class ScreenRecorder:
                     self.capture_mouse_scroll = data.get("capture_mouse_scroll", False)
                     self.capture_mouse_move = data.get("capture_mouse_move", False)
                     self.show_cursor = data.get("show_cursor", False)
+                    self.cursor_size = data.get("cursor_size", 10)
+                    self.cursor_style = data.get("cursor_style", "dot")
             except Exception as e:
                 print(f"Error loading config: {e}")
 
@@ -79,7 +83,9 @@ class ScreenRecorder:
             "capture_mouse_click": self.capture_mouse_click,
             "capture_mouse_scroll": self.capture_mouse_scroll,
             "capture_mouse_move": self.capture_mouse_move,
-            "show_cursor": self.show_cursor
+            "show_cursor": self.show_cursor,
+            "cursor_size": self.cursor_size,
+            "cursor_style": self.cursor_style
         }
         try:
             with open(self.config_file, 'w') as f:
@@ -266,9 +272,31 @@ class ScreenRecorder:
                         rel_x = mx - monitor["left"]
                         rel_y = my - monitor["top"]
                         
-                        # Draw circle
-                        # Color: Cyan (255, 255, 0) in BGR is (0, 255, 255)
-                        cv2.circle(frame_bgr, (int(rel_x), int(rel_y)), 5, (0, 255, 255), -1)
+                        # Draw Cursor
+                        cx, cy = int(rel_x), int(rel_y)
+                        radius = self.cursor_size
+                        color = (0, 255, 255) # Yellow/Cyan (BGR)
+                        thickness = 2
+                        
+                        if self.cursor_style == "dot":
+                            cv2.circle(frame_bgr, (cx, cy), radius, color, -1)
+                            
+                        elif self.cursor_style == "target":
+                            # Circle
+                            cv2.circle(frame_bgr, (cx, cy), radius, color, thickness)
+                            # Crosshair
+                            cv2.line(frame_bgr, (cx - radius - 5, cy), (cx + radius + 5, cy), color, thickness)
+                            cv2.line(frame_bgr, (cx, cy - radius - 5), (cx, cy + radius + 5), color, thickness)
+                            
+                        elif self.cursor_style == "pointer":
+                            # Simple Triangle
+                            pts = np.array([
+                                [cx, cy], 
+                                [cx, cy + int(radius * 1.5)], 
+                                [cx + int(radius * 1.2), cy + int(radius * 1.2)]
+                            ], np.int32)
+                            pts = pts.reshape((-1, 1, 2))
+                            cv2.fillPoly(frame_bgr, [pts], color)
                     
                     should_save = False
                     
