@@ -7,7 +7,7 @@ import mss
 import numpy as np
 import json
 from PIL import Image
-from pynput import keyboard
+from pynput import keyboard, mouse
 
 class ScreenRecorder:
     def __init__(self, output_dir="recordings"):
@@ -20,7 +20,9 @@ class ScreenRecorder:
 
         self.running = False
         self.recording_thread = None
-        self.listener = None
+        self.key_listener = None
+        self.mouse_listener = None
+        self.mouse_controller =  None
         
         # Default settings
         self.fps = 10
@@ -28,7 +30,16 @@ class ScreenRecorder:
         self.quality = 100 
         self.tile_divisions = 1 
         self.capture_on_keystroke = False
+        
+        # Mouse Settings
+        self.capture_mouse_click = False
+        self.capture_mouse_scroll = False
+        self.capture_mouse_move = False
+        self.show_cursor = False
+        
         self.key_pressed = False
+        self.mouse_triggered = False
+        self.mouse_pos = (0, 0)
         
         self.current_session_dir = None
         self.frame_count = 0
@@ -48,6 +59,12 @@ class ScreenRecorder:
                     self.tile_divisions = data.get("tile_divisions", self.tile_divisions)
                     self.capture_on_keystroke = data.get("capture_on_keystroke", self.capture_on_keystroke)
                     self.output_dir = data.get("output_dir", self.output_dir)
+                    
+                    # Mouse
+                    self.capture_mouse_click = data.get("capture_mouse_click", False)
+                    self.capture_mouse_scroll = data.get("capture_mouse_scroll", False)
+                    self.capture_mouse_move = data.get("capture_mouse_move", False)
+                    self.show_cursor = data.get("show_cursor", False)
             except Exception as e:
                 print(f"Error loading config: {e}")
 
@@ -58,7 +75,11 @@ class ScreenRecorder:
             "quality": self.quality,
             "tile_divisions": self.tile_divisions,
             "capture_on_keystroke": self.capture_on_keystroke,
-            "output_dir": self.output_dir
+            "output_dir": self.output_dir,
+            "capture_mouse_click": self.capture_mouse_click,
+            "capture_mouse_scroll": self.capture_mouse_scroll,
+            "capture_mouse_move": self.capture_mouse_move,
+            "show_cursor": self.show_cursor
         }
         try:
             with open(self.config_file, 'w') as f:
@@ -136,15 +157,78 @@ class ScreenRecorder:
         th = h // self.tile_divisions
         return tw, th
         
+    
     def set_capture_on_keystroke(self, enabled):
         self.capture_on_keystroke = enabled
-        
+
     def _on_press(self, key):
         self.key_pressed = True
 
-    def _start_keyboard_listener(self):
-        self.listener = keyboard.Listener(on_press=self._on_press)
-        self.listener.start()
+    def _on_move(self, x, y):
+        # Update mouse pos for drawing
+        self.mouse_pos = (x, y)
+        if self.capture_mouse_move:
+            self.mouse_triggered = True
+
+    def _on_click(self, x, y, button, pressed):
+        if pressed and self.capture_mouse_click:
+            self.mouse_triggered = True
+
+    def _on_scroll(self, x, y, dx, dy):
+        if self.capture_mouse_scroll:
+            self.mouse_triggered = True
+
+    def _start_input_listeners(self):
+        # Keyboard
+        self.key_listener = keyboard.Listener(on_press=self._on_press)
+        self.key_listener.start()
+        
+        # Mouse
+        self.mouse_listener = mouse.Listener(
+            on_move=self._on_move,
+            on_click=self._on_click,
+            on_scroll=self._on_scroll)
+        self.mouse_listener.start()
+        
+        # Controller for polling position if needed for drawing immediately
+        self.mouse_controller = mouse.Controller()
+
+    def start_recording(self):
+        if self.running:
+            return
+            
+        self.running = True
+        self.key_pressed = False
+        self.mouse_triggered = False
+        self.frame_count = 0
+        
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.current_session_dir = os.path.join(self.output_dir, f"session_{timestamp}")
+        
+        if not os.path.exists(self.current_session_dir):
+            os.makedirs(self.current_session_dir)
+            
+        print(f"Recording started. Saving to {self.current_session_dir}")
+        
+        self.recording_thread = threading.Thread(target=self._record_loop)
+        self.recording_thread.start()
+        
+        self._start_input_listeners()
+
+    def stop_recording(self):
+        self.running = False
+        if self.recording_thread:
+            self.recording_thread.join()
+        
+        if self.key_listener:
+            self.key_listener.stop()
+            self.key_listener = None
+            
+        if self.mouse_listener:
+            self.mouse_listener.stop()
+            self.mouse_listener = None
+            
+        print("Recording stopped.")
 
     def _get_threshold(self):
         # Invert sensitivity for threshold calculation
@@ -167,22 +251,36 @@ class ScreenRecorder:
                     sct_img = sct.grab(monitor)
                     frame = np.array(sct_img)
                     
-                    # Convert to BGR for OpenCV processing (mss returns BGRA)
-                    # Note: We cannot rely on Alpha channel for masking as some Linux 
-                    # compositors return Alpha=0 for the entire screen, leading to black images.
-                    # We simply drop the Alpha channel.
                     if frame.shape[2] == 4:
                         frame_bgr = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
                     else:
                         frame_bgr = frame
 
+                    # Draw Cursor if enabled
+                    if self.show_cursor:
+                        # Get current mouse position (relative to monitor if necessary, but pynput gives global)
+                        # Ensure we map global coordinates to the captured monitor area
+                        mx, my = self.mouse_controller.position
+                        
+                        # Adjust for monitor offset
+                        rel_x = mx - monitor["left"]
+                        rel_y = my - monitor["top"]
+                        
+                        # Draw circle
+                        # Color: Cyan (255, 255, 0) in BGR is (0, 255, 255)
+                        cv2.circle(frame_bgr, (int(rel_x), int(rel_y)), 5, (0, 255, 255), -1)
+                    
                     should_save = False
                     
-                    # Check Keystroke Trigger
+                    # Check Triggers
                     if self.capture_on_keystroke and self.key_pressed:
                         should_save = True
-                        self.key_pressed = False # Reset trigger
-
+                        self.key_pressed = False 
+                        
+                    if self.mouse_triggered:
+                        should_save = True
+                        self.mouse_triggered = False
+                    
                     if not should_save:
                         if prev_frame is None:
                             should_save = True

@@ -1,8 +1,8 @@
 {
-    "fps": 20,
-    "sensitivity": 99,
+    "fps": 25,
+    "sensitivity": 95,
     "quality": 80,
-    "tile_divisions": 4,
+    "tile_divisions": 16,
     "capture_on_keystroke": true,
     "output_dir": "/media/gerald/Projects/GitHub/ScreenRecorder/recordings"
 }

@@ -51,6 +51,7 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     - `--tiles <int>`: Override Tile Divisions (1 = Full Screen).
     - `--fps <val>`: Override FPS.
     - `--sens <val>`: Override Sensitivity.
+    - `--keystroke`: Enable Capture on Keystroke.
     - `--help`: Show all available options.
 
 3.  **Controls**:
