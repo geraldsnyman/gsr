@@ -47,7 +47,11 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     ```bash
     python3 src/main.py --cli
     ```
-    *Useful for headless servers or automation.*
+    *Options:*
+    - `--tiles <int>`: Override Tile Divisions (1 = Full Screen).
+    - `--fps <val>`: Override FPS.
+    - `--sens <val>`: Override Sensitivity.
+    - `--help`: Show all available options.
 
 3.  **Controls**:
     - **Sensitivity**: Threshold for motion detection (Higher = less sensitive).

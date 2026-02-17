@@ -30,6 +30,7 @@ if __name__ == "__main__":
     parser.add_argument("--cli", action="store_true", help="Run in Command Line Interface mode (no GUI)")
     parser.add_argument("--fps", type=int, help="Override FPS")
     parser.add_argument("--sens", type=int, help="Override Sensitivity (0-100)")
+    parser.add_argument("--tiles", type=int, help="Override Tile Divisions (e.g. 1 for Full Screen)")
     
     args = parser.parse_args()
 
@@ -40,6 +41,7 @@ if __name__ == "__main__":
         # Apply overrides
         if args.fps: recorder_instance.fps = args.fps
         if args.sens: recorder_instance.sensitivity = args.sens
+        if args.tiles: recorder_instance.set_tile_divisions(args.tiles)
         
         print(f"Settings: FPS={recorder_instance.fps}, Sensitivity={recorder_instance.sensitivity}, TileDivs={recorder_instance.tile_divisions}")
         print("Press Ctrl+C to stop recording.")
