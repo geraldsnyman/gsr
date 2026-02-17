@@ -24,7 +24,8 @@ Screen recording software often forces a choice:
 - Screen capture via `mss`.
 - Change detection algorithm (sensitivity).
 - Adjustable Frame Rate (FPS).
-- Output to a designated folder.
+- Input Triggers (Keystroke, Mouse Click/Scroll/Move).
+- Cursor Overlay with customizable Styles.
 - Basic GUI for settings and control.
 
 ### Out-of-Scope

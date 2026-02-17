@@ -90,6 +90,11 @@ This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
 - Run headless triggers via `--cli`.
 - Override settings via flags (`--fps`, `--sens`, `--tiles`, `--keystroke`).
 
+### M. Mouse & Cursor Features [Completed]
+- **Mouse Triggers**: Capture frames on Click, Scroll, or Move (optional).
+- **Cursor Overlay**: Software-drawn cursor to fix Linux capture issues.
+- **Customization**: Adjust cursor size (5-50px) and style (Dot, Target, Pointer).
+
 ## 4. Development Phases
 - [x] **Phase 0: Initialization** - Setup project structure and docs.
 - [x] **Phase 1: Core Logic** - Implement basic capture and save loop.
@@ -97,7 +102,8 @@ This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
 - [x] **Phase 3: Optimization** - Configurable FPS, Sensitivity, Quality.
 - [x] **Phase 4: Advanced Features** - Smart Sensitivity (Tile Size), Keystroke Trigger.
 - [x] **Phase 5: Refinement** - UI Polish (Scrollable), Linux Integration, Persistent Settings, CLI Support.
-- [ ] **Phase 4: Testing & Polish** - Verify performance and UX.
+- [x] **Phase 6: Mouse & Cursor** - Click/Scroll/Move Triggers, Custom Cursor Overlay (Size/Style). 
+- [ ] **Phase 7: Testing & Polish** - Verify performance and UX.
 
 ## 5. Documentation Tasks
 - Maintain README with usage instructions.

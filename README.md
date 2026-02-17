@@ -52,13 +52,22 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     - `--fps <val>`: Override FPS.
     - `--sens <val>`: Override Sensitivity.
     - `--keystroke`: Enable Capture on Keystroke.
+    - `--mouse-click`: Enable Capture on Mouse Click.
+    - `--mouse-scroll`: Enable Capture on Mouse Scroll.
+    - `--mouse-move`: Enable Capture on Mouse Move.
+    - `--show-cursor`: Draw Cursor Overlay on recording.
     - `--help`: Show all available options.
 
 3.  **Controls**:
     - **Sensitivity**: Threshold for motion detection (Higher = less sensitive).
     - **Tile Size**: Grid granularity. Defaults to ~960x540. Smaller tiles = more sensitive to tiny area changes.
         - *Tip: Use Arrow Keys (Left/Right) to fine-tune sliders.*
-    - **Capture on Keystroke**: Force capture a frame whenever a key is pressed (ideal for typing).
+    - **Triggers**:
+        - **Keystroke**: Force capture on key press.
+        - **Mouse**: Force capture on Click, Scroll, or Move.
+    - **Cursor Overlay**: 
+        - visually draws the mouse cursor (Dot, Target, Pointer) on the recording to ensure visibility.
+        - customizable size (5-50px).
     - **FPS**: Maximum capture frequency.
     - **Quality**: JPEG compression quality.
     - **Output**: Select destination folder.
