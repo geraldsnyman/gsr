@@ -20,7 +20,11 @@ Thank you for your interest in contributing to **Gerald's Screen Recorder (GSR)*
 
 ## Development Workflow
 
+**🚨 IMPORTANT: The `master` and `main` branches are protected!** 
+Direct commits to these branches are blocked by pre-commit hooks. All new features and bug fixes must be developed on a separate branch (like `develop` or a `feature/` branch) and submitted via a Pull Request.
+
 1.  **Create a Branch**:
+    We recommend branching off `develop` or creating a specific feature branch:
     ```bash
     git checkout -b feature/your-feature-name
     ```
