@@ -49,7 +49,7 @@ For tutorials utilizing a "split-screen" layout (e.g., a screen divided into qua
 ### D. Testing
 - [x] **Test**: Verify on a fresh Linux install (Options: VM, Live USB, Docker).
 - [x] **Test**: PyPI installation in an isolated virtual environment.
-- [ ] Test long recording sessions (1hr+).
+- [x] Test long recording sessions (1hr+).
 
 
 ## 3. Release Phase (Distribution)
