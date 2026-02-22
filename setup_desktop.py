@@ -8,17 +8,17 @@ def create_desktop_entry():
     run_script = os.path.join(base_dir, "run.sh")
     
     desktop_file_content = f"""[Desktop Entry]
-Name=Simple Screen Recorder
+Name=Gerald's Screen Recorder
 Comment=A simple screen recorder application
 Exec={run_script}
 Icon={icon_path}
 Terminal=false
 Type=Application
 Categories=Utility;Recorder;
-StartupWMClass=SimpleScreenRecorder
+StartupWMClass=GSR
 """
 
-    desktop_path = os.path.expanduser("~/.local/share/applications/SimpleScreenRecorder.desktop")
+    desktop_path = os.path.expanduser("~/.local/share/applications/gsr.desktop")
     
     try:
         os.makedirs(os.path.dirname(desktop_path), exist_ok=True)

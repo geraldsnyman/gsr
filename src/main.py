@@ -23,39 +23,69 @@ def signal_handler(sig, frame):
     
     sys.exit(0)
 
-if __name__ == "__main__":
+def main():
     signal.signal(signal.SIGINT, signal_handler)
 
-    parser = argparse.ArgumentParser(description="Simple Screen Recorder")
-    parser.add_argument("--cli", action="store_true", help="Run in Command Line Interface mode (no GUI)")
-    parser.add_argument("--fps", type=int, help="Override FPS")
-    parser.add_argument("--sens", type=int, help="Override Sensitivity (0-100)")
-    parser.add_argument("--tiles", type=int, help="Override Tile Divisions (e.g. 1 for Full Screen)")
-    parser.add_argument("--keystroke", action="store_true", help="Enable Capture on Keystroke")
-    parser.add_argument("--mouse-click", action="store_true", help="Capture on Mouse Click")
-    parser.add_argument("--mouse-move", action="store_true", help="Capture on Mouse Move")
-    parser.add_argument("--mouse-scroll", action="store_true", help="Capture on Mouse Scroll")
-    parser.add_argument("--show-cursor", action="store_true", help="Draw Cursor Overlay")
+    parser = argparse.ArgumentParser(prog="gsr", description="Gerald's Screen Recorder (GSR)")
+    
+    # Core Operations
+    parser.add_argument("--save", action="store_true", help="Save the provided CLI arguments to permanent GUI settings")
+    
+    # Capture Overrides
+    parser.add_argument("-f", "--fps", type=int, help="Override FPS (1-60)")
+    parser.add_argument("-s", "--sens", type=int, help="Override Sensitivity (0-100)")
+    parser.add_argument("-t", "--tiles", type=int, help="Override Tile Divisions (1 = Full Screen)")
+    parser.add_argument("-q", "--quality", type=int, help="Override JPEG Output Quality (1-100)")
+    parser.add_argument("-o", "--output", type=str, help="Override Output Directory")
+    
+    # Boolean Triggers (Automatically supports --feature and --no-feature)
+    parser.add_argument("--keystroke", action=argparse.BooleanOptionalAction, help="Capture on Keystroke")
+    parser.add_argument("--mouse-click", action=argparse.BooleanOptionalAction, help="Capture on Mouse Click")
+    parser.add_argument("--mouse-scroll", action=argparse.BooleanOptionalAction, help="Capture on Mouse Scroll")
+    parser.add_argument("--mouse-move", action=argparse.BooleanOptionalAction, help="Capture on Mouse Move")
+    
+    # Cursor Settings
+    parser.add_argument("--show-cursor", action=argparse.BooleanOptionalAction, help="Draw Cursor Overlay")
+    parser.add_argument("--cursor-size", type=int, help="Override Cursor Size (5-50)")
+    parser.add_argument("--cursor-style", type=str, choices=["dot", "target", "pointer"], help="Override Cursor Style")
     
     args = parser.parse_args()
 
-    if args.cli:
+    # Automatically run in CLI mode if any arguments are passed
+    if len(sys.argv) > 1:
         print("Starting in CLI Mode...")
+        global recorder_instance
         recorder_instance = ScreenRecorder()
         
-        # Apply overrides
-        if args.fps: recorder_instance.fps = args.fps
-        if args.sens: recorder_instance.sensitivity = args.sens
-        if args.tiles: recorder_instance.set_tile_divisions(args.tiles)
-        if args.keystroke: recorder_instance.set_capture_on_keystroke(True)
-        if args.mouse_click: recorder_instance.capture_mouse_click = True
-        if args.mouse_move: recorder_instance.capture_mouse_move = True
-        if args.mouse_scroll: recorder_instance.capture_mouse_scroll = True
-        if args.show_cursor: recorder_instance.show_cursor = True
+        # Apply numerical/string overrides (only if explicitly passed)
+        if args.fps is not None: recorder_instance.set_fps(args.fps)
+        if args.sens is not None: recorder_instance.set_sensitivity(args.sens)
+        if args.tiles is not None: recorder_instance.set_tile_divisions(args.tiles)
+        if args.quality is not None: recorder_instance.set_quality(args.quality)
+        if args.output is not None: recorder_instance.set_output_dir(args.output)
         
-        print(f"Settings: FPS={recorder_instance.fps}, Sensitivity={recorder_instance.sensitivity}, TileDivs={recorder_instance.tile_divisions}")
-        print(f"Triggers: Keys={recorder_instance.capture_on_keystroke}, Click={recorder_instance.capture_mouse_click}, Move={recorder_instance.capture_mouse_move}, Scroll={recorder_instance.capture_mouse_scroll}")
-        print("Press Ctrl+C to stop recording.")
+        # Apply boolean toggles (True/False allowed via --feature and --no-feature)
+        if args.keystroke is not None: recorder_instance.set_capture_on_keystroke(args.keystroke)
+        if args.mouse_click is not None: recorder_instance.capture_mouse_click = args.mouse_click
+        if args.mouse_move is not None: recorder_instance.capture_mouse_move = args.mouse_move
+        if args.mouse_scroll is not None: recorder_instance.capture_mouse_scroll = args.mouse_scroll
+        
+        # Apply Cursor settings
+        if args.show_cursor is not None: recorder_instance.show_cursor = args.show_cursor
+        if args.cursor_size is not None: recorder_instance.cursor_size = args.cursor_size
+        if args.cursor_style is not None: recorder_instance.cursor_style = args.cursor_style
+        
+        if args.save:
+            print("Saving CLI overrides to permanent settings...")
+            recorder_instance.save_settings()
+        
+        print("\n=== Active Configuration ===")
+        print(f"Capture  : FPS={recorder_instance.fps}, Sensitivity={recorder_instance.sensitivity}, Tiles={recorder_instance.tile_divisions}, Quality={recorder_instance.quality}")
+        print(f"Triggers : Keys={recorder_instance.capture_on_keystroke}, Click={recorder_instance.capture_mouse_click}, Scroll={recorder_instance.capture_mouse_scroll}, Move={recorder_instance.capture_mouse_move}")
+        print(f"Cursor   : Overlay={recorder_instance.show_cursor}, Style={recorder_instance.cursor_style}, Size={recorder_instance.cursor_size}")
+        print(f"Output   : {recorder_instance.output_dir}")
+        print("============================\n")
+        print("Press Ctrl+C to stop recording (or Ctrl+Z to send to background).")
         
         recorder_instance.start_recording()
         
@@ -70,5 +100,9 @@ if __name__ == "__main__":
         ctk.set_appearance_mode("System")  
         ctk.set_default_color_theme("blue") 
         
+        global app_instance
         app_instance = ScreenRecorderApp()
         app_instance.mainloop()
+
+if __name__ == "__main__":
+    main()

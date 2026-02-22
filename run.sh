@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-# Run script for Simple Screen Recorder
+# Run script for Gerald's Screen Recorder (GSR)
 
 if [ ! -d "venv" ]; then
     echo "Virtual environment not found. Running setup.sh..."
@@ -9,4 +9,4 @@ if [ ! -d "venv" ]; then
 fi
 
 source venv/bin/activate
-python src/main.py
+python src/main.py "$@"

@@ -1,10 +1,13 @@
-# Simple Screen Recorder Project Plan
+# Gerald's Screen Recorder Project Plan
 
 ## 1. Objective: The 4K Multi-Track Workflow
-This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
-- **The Concept**: Record the entire 4K desktop containing up to 4 full 1080p application windows (e.g., IDE, Browser, Terminal, Preview) simultaneously.
-- **The Goal**: In post-production (e.g., DaVinci Resolve), the single 4K video source is duplicated into multiple tracks, each cropped to a specific 1080p region. This allows the editor to switch views (virtual multi-cam) between applications instantly without having to switch windows during the actual recording session.
-- **Why**: This ensures no context is ever lost. Example: An edit in the IDE (View 1) causes an immediate update in the Browser (View 2). Both are captured perfectly in sync.
+This project is designed to enable a high-efficiency **"Capture Once, Edit Anywhere"** workflow while primarily **eliminating the recording of inactivity**.
+- **The Concept**: Record the entire 4K desktop containing up to 4 full 1080p application windows (e.g., IDE, Browser, Terminal, Preview) simultaneously, capturing frames *only* when real activity occurs (e.g. typing, moving, rendering).
+- **The Workflow**:
+    1. **Recording**: Smart triggers (keystrokes, motion) ensure no dead footage is captured when thinking or stepping away.
+    2. **Processing**: Run `ffmpeg` to split the raw 4K sequence into 4 distinct 1080p quadrant sequences.
+    3. **Post-Production**: Import these 4 sequences into DaVinci Resolve for streamlined, virtual multi-cam editing.
+- **The Goal**: Avoid tedious timeline scrubbing. An editor only sees active frames while no context is ever lost. Example: An edit in the IDE (View 1) causes an immediate update in the Browser (View 2). Both are captured perfectly in sync, with all the idle time squeezed out.
 
 ## 2. Core Philosophy
 - **Resolution is King**: Primary output is high-bitrate, full-resolution JPEG sequences to ensure 1080p crops remain sharp.
@@ -87,8 +90,9 @@ This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
 - Auto-load settings on startup.
 
 ### L. CLI Mode [Completed]
-- Run headless triggers via `--cli`.
-- Override settings via flags (`--fps`, `--sens`, `--tiles`, `--keystroke`).
+- Run headless mode automatically when configuration flags are provided.
+- Override settings via flags (`-f`, `-s`, `-t`, `-o`, `--keystroke`, etc.).
+- Include `--save` flag to persist CLI parameters to the GUI settings file.
 
 ### M. Mouse & Cursor Features [Completed]
 - **Mouse Triggers**: Capture frames on Click, Scroll, or Move (optional).
@@ -103,8 +107,12 @@ This project is designed to enable a **"Capture Once, Edit Anywhere"** workflow.
 - [x] **Phase 4: Advanced Features** - Smart Sensitivity (Tile Size), Keystroke Trigger.
 - [x] **Phase 5: Refinement** - UI Polish (Scrollable), Linux Integration, Persistent Settings, CLI Support.
 - [x] **Phase 6: Mouse & Cursor** - Click/Scroll/Move Triggers, Custom Cursor Overlay (Size/Style). 
-- [ ] **Phase 7: Testing & Polish** - Verify performance and UX.
+- [x] **Phase 7: Testing & Polish** - Verify performance, docs (man pages, README), and UX.
 
 ## 5. Documentation Tasks
 - Maintain README with usage instructions.
 - Update this plan as features are completed.
+
+## 6. Future Upgrades (Premium Roadmap)
+- **Capture Card Integration**: Adding support for recording high-quality external video inputs directly into the workflow sequence.
+- **DaVinci Resolve Automated Project Generator**: A post-production Python script that parses the recording metadata, creates a multi-track DaVinci Resolve timeline, imports the view tracks (quadrants), and automatically generates a master editing track that seamlessly switches between the views based on application activity and mouse location. This mimics the sophisticated behavior of an ATEM ISO directly on the software editing timeline.

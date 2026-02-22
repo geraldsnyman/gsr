@@ -32,3 +32,10 @@ ENV/
 # Project
 recordings/
 scratch/
+
+# Application Specific
+config.json
+*.AppImage
+appimagetool
+*.spec
+test_*.py

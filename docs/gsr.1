@@ -1,0 +1,87 @@
+.TH GSR 1 "February 2026" "GSR 1.0" "User Commands"
+.SH NAME
+gsr \- Gerald's Screen Recorder, a lightweight, motion-optimized screen recorder component
+.SH SYNOPSIS
+.B gsr
+[\fI\,OPTIONS\/\fR]
+.SH DESCRIPTION
+\fBgsr\fR is a lightweight, motion-optimized screen recorder for Linux. It significantly reduces disk space and CPU usage by recording frames only when visual changes are detected on-screen, or through specific hardware triggers such as mouse clicks and keystrokes.
+.PP
+Running \fBgsr\fR with no arguments will launch the Graphical User Interface (GUI), giving access to a streamlined, interactive settings panel. Providing any configuration flags will automatically launch \fBgsr\fR in a headless Command Line Interface (CLI) mode, ideal for scripting or background recording.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show the help message and exit.
+.TP
+\fB\-\-save\fR
+Save the provided CLI arguments to the permanent GUI configuration file. Future GUI launches will default to these settings.
+.SS CAPTURE SETTINGS
+.TP
+\fB\-f\fR, \fB\-\-fps\fR \fIFPS\fR
+Override the maximum capture frequency (frames per second). Valid range: 1 to 60.
+.TP
+\fB\-s\fR, \fB\-\-sens\fR \fISENSITIVITY\fR
+Override the motion detection Sensitivity threshold. Valid range: 0 to 100. Higher values make the recorder more sensitive to minute visual changes.
+.TP
+\fB\-t\fR, \fB\-\-tiles\fR \fITILE_DIVISIONS\fR
+Override the grid granularity for motion detection algorithms. For example, \fI1\fR treats the screen as a single full-screen tile.
+.TP
+\fB\-q\fR, \fB\-\-quality\fR \fIQUALITY\fR
+Override the JPEG output compression quality. Valid range: 1 to 100.
+.TP
+\fB\-o\fR, \fB\-\-output\fR \fIDIRECTORY\fR
+Override the directory paths where session recording frames are saved.
+.SS HARDWARE TRIGGERS
+These boolean flags dictate whether \fBgsr\fR will force a frame capture upon receiving specific input events, bypassing the visual motion detection algorithm. These overrides support disabling via the \fB\-\-no\-\fR prefix (e.g., \fB\-\-no\-keystroke\fR).
+.TP
+\fB\-\-keystroke\fR, \fB\-\-no\-keystroke\fR
+Enable or disable forced frame capture on any keyboard key press.
+.TP
+\fB\-\-mouse\-click\fR, \fB\-\-no\-mouse\-click\fR
+Enable or disable forced frame capture on mouse clicks.
+.TP
+\fB\-\-mouse\-scroll\fR, \fB\-\-no\-mouse\-scroll\fR
+Enable or disable forced frame capture on mouse scroll wheel activity.
+.TP
+\fB\-\-mouse\-move\fR, \fB\-\-no\-mouse\-move\fR
+Enable or disable forced frame capture on mouse pointer movement.
+.SS CURSOR OVERLAY
+.TP
+\fB\-\-show\-cursor\fR, \fB\-\-no\-show\-cursor\fR
+Enable or disable drawing a customized visible cursor overlay onto the recorded frames.
+.TP
+\fB\-\-cursor\-size\fR \fISIZE\fR
+Override the size footprint of the cursor overlay. Valid range: 5 to 50 pixels.
+.TP
+\fB\-\-cursor\-style\fR {\fIdot\fR, \fItarget\fR, \fIpointer\fR}
+Override the visual style of the drawn cursor overlay.
+.SH EXAMPLES
+.B Launch the GUI interface:
+.RS 4
+gsr
+.RE
+.PP
+.B Record headlessly with a 90% JPEG quality, ignoring any saved GUI presets:
+.RS 4
+gsr \-q 90
+.RE
+.PP
+.B Record headlessly, forcing captures on keystrokes but ignoring mouse movements, and save this configuration as the new default for the GUI:
+.RS 4
+gsr \-\-keystroke \-\-no\-mouse\-move \-\-save
+.RE
+.SH WORKFLOW
+\fBgsr\fR does not produce traditional video files (like .mp4 or .mkv). Instead, it outputs a highly efficient \fBimage sequence\fR consisting of JPEG frames. 
+.PP
+This sequence can be directly imported into professional video editing software. For example, in \fBDaVinci Resolve\fR, you can import the entire directory of frames as a single media clip, which perfectly preserves the exact variable timing of your workflow.
+.PP
+Alternatively, you can manually compile the image sequence into a standard video file using \fBFFmpeg\fR:
+.RS 4
+ffmpeg -framerate 30 -i frame_%05d.jpg -c:v libx264 -pix_fmt yuv420p output.mp4
+.RE
+.SH AUTHOR
+Written by Gerald Snyman.
+.PP
+Website: gsvv.co.za/software/gsr
+.br
+Contact: gsvvcoza@gmail.com

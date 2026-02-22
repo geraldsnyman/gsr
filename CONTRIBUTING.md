@@ -1,13 +1,13 @@
-# Contributing to Simple Screen Recorder
+# Contributing to Gerald's Screen Recorder
 
-Thank you for your interest in contributing to **Simple Screen Recorder**! We welcome improvements, bug fixes, and suggestions to make this the best lightweight screen recording tool for developers and creators.
+Thank you for your interest in contributing to **Gerald's Screen Recorder (GSR)**! We welcome improvements, bug fixes, and suggestions to make this the best lightweight screen recording tool for developers and creators.
 
 ## Getting Started
 
 1.  **Fork the Repository**: Click the "Fork" button on the top right of the repository page.
 2.  **Clone Your Fork**:
     ```bash
-    git clone https://github.com/YOUR-USERNAME/ScreenRecorder.git
+    git clone https://github.com/geraldsnyman/ScreenRecorder.git
     cd ScreenRecorder
     ```
 3.  **Set Up Environment**:

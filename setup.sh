@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-# Setup script for Simple Screen Recorder
+# Setup script for Gerald's Screen Recorder (GSR)
 
 echo "Checking system dependencies..."
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then

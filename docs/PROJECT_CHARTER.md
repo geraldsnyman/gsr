@@ -6,18 +6,17 @@ To empower technical content creators with a tool that captures the **entire wor
 Instead of constantly switching scenes in OBS or sharing single windows, the creator records their **full 4K canvas** containing up to four 1080p applications (e.g., Code, Browser, Terminal, Live Preview).
 
 The magic happens in **Post-Production** (e.g., DaVinci Resolve):
-1.  Import the single high-res Image Sequence.
-2.  Duplicate the track 4 times.
-3.  Crop each track to a specific application quadrant.
-4.  Switch between these "angles" instantly.
+1.  **Process**: Use `ffmpeg` to split the single high-res Image Sequence into four distinct application quadrant sequences.
+2.  **Edit**: Import these sequences into DaVinci Resolve.
+3.  **Multi-Cam**: Edit using the sequences as a virtual multi-cam setup, switching between "angles" instantly.
 
 ## The Problem
-Screen recording software often forces a choice:
-- **Record EVERYTHING**: The viewer sees tiny text on a 4K screen.
+Screen recording software often struggles with efficiency:
+- **Record EVERYTHING**: The viewer sees tiny text on a 4K screen, and traditional recorders capture hours of **dead footage** (inactivity) when the user is thinking or steps away, requiring tedious editing.
 - **Record ONE Window**: The viewer misses context updates happening in other windows (e.g., a browser refresh triggered by code save).
 
 ## The Solution
-**Simple Screen Recorder** captures the full resolution but optimizes storage using smart change detection (Sensitivity + Keystrokes). It delivers a "Master Tape" of your entire session, from which any specific "Camera Angle" (Application View) can be extracted in perfect 1080p clarity later.
+**Gerald's Screen Recorder** captures the full resolution but optimizes storage and the editor's time by using smart change detection (Sensitivity) and explicit input tracking (Keystrokes, Mouse). It acts as an intelligent camera that **eliminates the recording of inactivity**. It delivers a continuous "Master Tape" of your active session. From this master tape, any specific "Camera Angle" (Application View) can be extracted in perfect 1080p clarity without forcing the editor to scrub through hours of nothingness.
 
 ## Scope
 ### In-Scope
@@ -28,15 +27,20 @@ Screen recording software often forces a choice:
 - Cursor Overlay with customizable Styles.
 - Basic GUI for settings and control.
 
-### Out-of-Scope
+### Out-of-Scope (for MVP)
 - Audio recording.
 - Video encoding (output is image sequence).
 - Built-in playback or editing features.
 - Multi-monitor support beyond primary screen (initially).
 
+### Future Upgrades (Premium Tier)
+- **Capture Card Integration**: Support high-quality video inputs alongside the screen recording.
+- **DaVinci Resolve Project Generator**: An automation script that builds a Resolve project with the quadrant sequences and a master track that automatically switches views based on activity or mouse position (similar to an ATEM ISO workflow).
+
 ## Stakeholders
-- **User**: Content creators, developers, security monitoring.
-- **Developer**: Antigravity (AI).
+- **Content Creators / Educators**: Need extreme multi-cam flexibility for software or physical tutorials, while avoiding recording dead footage (e.g., waiting between keystrokes or actions).
+- **Developers / Tech Teams**: Need to record flawless bug reproductions without exposing the underlying desktop or other sensitive background applications.
+- **Developer**: GSVV and Antigravity (AI).
 
 ## Deliverables
 - Source code (Python).

@@ -1,5 +1,8 @@
+# Gerald's Screen Recorder (GSR)
 
-# Simple Screen Recorder
+![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![OS](https://img.shields.io/badge/os-linux-black)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 A tool to capture your **Full 4K Desktop** as a smart sequence of high-quality JPEG images. 
 
@@ -35,7 +38,7 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     ```bash
     python3 setup_desktop.py
     ```
-    *This allows you to find "Simple Screen Recorder" in your system's application menu and ensures the taskbar icon displays correctly.*
+    *This allows you to find "Gerald's Screen Recorder" or "GSR" in your system's application menu and ensures the taskbar icon displays correctly.*
 
 ## Usage
 
@@ -44,19 +47,33 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     ./run.sh
     ```
 2.  **Run via CLI (No GUI)**:
+    Providing any configuration flags will bypass the GUI and run headlessly:
     ```bash
-    python3 src/main.py --cli
+    gsr -f 30 -q 90 --keystroke --no-show-cursor
+    # or
+    python3 src/main.py -f 30 -q 90
     ```
-    *Options:*
-    - `--tiles <int>`: Override Tile Divisions (1 = Full Screen).
-    - `--fps <val>`: Override FPS.
-    - `--sens <val>`: Override Sensitivity.
-    - `--keystroke`: Enable Capture on Keystroke.
-    - `--mouse-click`: Enable Capture on Mouse Click.
-    - `--mouse-scroll`: Enable Capture on Mouse Scroll.
-    - `--mouse-move`: Enable Capture on Mouse Move.
+    *Core Options:*
+    - `-c, --cli`: Force CLI mode even without other flags.
+    - `--save`: Save the provided CLI overrides to the permanent GUI settings.
+    - `-f, --fps <val>`: Override maximum FPS (1-60).
+    - `-s, --sens <val>`: Override Sensitivity (0-100).
+    - `-t, --tiles <val>`: Override Tile Divisions (1 = Full Screen).
+    - `-q, --quality <val>`: Override JPEG Output Quality (1-100).
+    - `-o, --output <path>`: Override Output Directory.
+
+    *Boolean Overrides (use `--feature` or `--no-feature`):*
+    - `--keystroke`: Force capture on key press.
+    - `--mouse-click`: Force capture on Mouse Click.
+    - `--mouse-scroll`: Force capture on Mouse Scroll.
+    - `--mouse-move`: Force capture on Mouse Move.
     - `--show-cursor`: Draw Cursor Overlay on recording.
-    - `--help`: Show all available options.
+
+    *Cursor Settings:*
+    - `--cursor-size <val>`: Override Cursor Size (5-50).
+    - `--cursor-style <style>`: Override Cursor Style (`dot`, `target`, `pointer`).
+
+    *View all options by running `gsr --help` or `man gsr`.*
 
 3.  **Controls**:
     - **Sensitivity**: Threshold for motion detection (Higher = less sensitive).
@@ -72,6 +89,12 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     - **Quality**: JPEG compression quality.
     - **Output**: Select destination folder.
     - **Start/Stop**: Toggle recording.
+
+4.  **Terminal Workflow (Backgrounding)**:
+    If you launch GSR from the terminal (e.g., `./run.sh`) and want to continue using that same terminal window:
+    - Press **`Ctrl + Z`** to instantly suspend (pause) the application.
+    - Type **`bg`** and hit `Enter` to resume the app silently in the background.
+    - Type **`fg`** at any time to bring the app back to the foreground to safely close it using `Ctrl + C`.
 
 ## Optimization Guide
 
