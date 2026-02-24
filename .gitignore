@@ -39,3 +39,4 @@ config.json
 appimagetool
 *.spec
 test_*.py
+bin/
