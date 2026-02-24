@@ -20,8 +20,9 @@ echo "PyPI build complete. Artifacts are in dist/"
 # 2. BUILD SINGLE BINARY via PyInstaller
 echo "--- Building Standalone Binary via PyInstaller ---"
 pip install pyinstaller
-pyinstaller --name gsr --onefile --noconfirm src/main.py
-echo "PyInstaller build complete. Binary is at dist/gsr."
+mkdir -p bin
+pyinstaller --name gsr --onefile --noconfirm --distpath bin src/main.py
+echo "PyInstaller build complete. Binary is at bin/gsr."
 
 # 3. BUILD APPIMAGE
 echo "--- Building AppImage ---"
@@ -32,7 +33,7 @@ rm -rf "$APPDIR"
 mkdir -p "$APPDIR/usr/bin"
 
 # Copy binary
-cp dist/gsr "$APPDIR/usr/bin/gsr"
+cp bin/gsr "$APPDIR/usr/bin/gsr"
 
 # Copy Icon
 cp assets/icon.png "$APPDIR/gsr.png"

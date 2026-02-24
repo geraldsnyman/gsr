@@ -4,17 +4,20 @@
 ![OS](https://img.shields.io/badge/os-linux-black)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-A tool to capture your **Full 4K Desktop** as a smart sequence of high-quality JPEG images. 
+A tool to capture your **Full 4K Desktop** as a smart sequence of high-quality JPEG images.
 
-Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 applications (Code, Browser, Terminal, Live Preview) simultaneously on a 4K screen. In post-production (e.g., DaVinci Resolve), crop this single 4K master into multiple 1080p tracks to create a dynamic "multi-cam" editing experience without ever switching windows during recording.
+GSR is a sensitivity-based motion and change recorder that intelligently monitors your screen. It only captures frames when a user-defined level of visual change occurs, or when specific keystroke and mouse activities are triggered, effectively eliminating dead footage and idle moments from your recordings.
+
+Designed for the **"Capture Once, Edit Anywhere"** workflow, it allows you to record four applications simultaneously (such as a code editor, browser, terminal, and live preview) tiled on a single 4K screen. This captures the complete cause and effect between applications in real-time. In post-production, you can crop this 4K master file into multiple 1080p tracks within an editor like DaVinci Resolve to create a dynamic "multi-cam" sequence, all without ever needing to switch windows while recording.
 
 ## Features
-- **Efficient Capture**: Only saves frames when significant change is detected.
+- **Efficient Capture**: Only saves frames when the user-defined level of change is detected.
 - **Smart Sensitivity**: Grid-based detection (Tile Size) allows capturing small changes (like cursors) or ignoring them.
 - **Keystroke Trigger**: Option to force capture when typing, ensuring no text is missed.
+- **Mouse Trigger**: Option to force capture on mouse clicks, scrolls, or movements.
 - **Adjustable Quality**: JPEG compression control to save space.
 - **Persistant Settings**: Automatically saves and loads your configuration.
-- **Modern UI**: Dark-themed, scrollable interface with keyboard support for sliders.
+- **Modern UI**: Dark-themed, fixed window interface with keyboard support for sliders.
 - **Linux Integration**: Includes desktop entry setup for system menu integration.
 
 ## Installation
@@ -76,7 +79,7 @@ Designed for the **"Capture Once, Edit Anywhere"** workflow: Record up to 4 appl
     *View all options by running `gsr --help` or `man gsr`.*
 
 3.  **Controls**:
-    - **Sensitivity**: Threshold for motion detection (Higher = less sensitive).
+    - **Sensitivity**: Threshold for motion detection (Higher = more sensitive).
     - **Tile Size**: Grid granularity. Defaults to ~960x540. Smaller tiles = more sensitive to tiny area changes.
         - *Tip: Use Arrow Keys (Left/Right) to fine-tune sliders.*
     - **Triggers**:
@@ -115,8 +118,8 @@ To achieve the best balance of performance (low CPU) and capture accuracy:
     -   **Strategy**:
         -   Set Tile Size to **Large** (Left).
         -   Set Sensitivity to **Medium/High** (Center/Right).
-        -   If it's missing big window changes, lower the Sensitivity (Left).
-        -   If it's capturing too much (idle cursor blinking), increase Sensitivity (Right).
+        -   If it's capturing too much (idle cursor blinking), lower the Sensitivity (Left).
+        -   If it's missing big window changes, increase the Sensitivity (Right) or reduce the Tile Size (Right).
 
 **Summary**: Use **Keystroke Capture** + **Large Tiles** + **Medium Sensitivity** for the most efficient recording of work/coding sessions.
 

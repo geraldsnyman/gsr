@@ -58,16 +58,16 @@ For tutorials utilizing a "split-screen" layout (e.g., a screen divided into qua
 - [x] **Release Assets**: Upload the `AppImage` or `zip` of source code to the "Releases" section.
 - [x] **Badges**: Add build status, license, and version badges to README.
 
-### B. Website (The Storefront - gsvv.co.za)
+### B. Package Managers (Distribution Channels)
+- [x] **PyPI (pip)**: `pipx install gsr` (Reserved the name `gsr`!).
+- [ ] **Snap/Flatpak**: Consider later for wider Linux store reach.
+
+### C. Website (The Storefront - gsvv.co.za)
 - [ ] **Landing Page**: Create `gsvv.co.za/software/gsr`.
     - [ ] **Hero Section**: "The Professional's Layout Recorder. Capture Context, Crop Later."
-    - [ ] **Download Button**: Direct link to the `AppImage` or GitHub Release.
+    - [ ] **Download Options**: Direct links to the `AppImage`, GitHub Release, and `pip`/package manager installation commands.
     - [ ] **Feature Highlight**: Show the "Multi-Track Workflow" concept visually.
     - [ ] **Tutorial**: Embed the YouTube tutorial here.
-
-### C. Package Managers (Optional/Future)
-- [ ] **PyPI (pip)**: `pip install simple-screen-recorder` (Good for devs).
-- [ ] **Snap/Flatpak**: Consider later for wider Linux store reach.
 
 ## 4. Marketing Strategy (Promotion)
 ### A. Content Marketing (YouTube)
@@ -100,9 +100,9 @@ For tutorials utilizing a "split-screen" layout (e.g., a screen divided into qua
 | Timeline | Task | Owner | Status |
 | :--- | :--- | :--- | :--- |
 | **Day 1** | Finalize Code & Docs. Create GitHub Repo. | Dev | In Progress |
-| **Day 2** | Build AppImage/Binary. Test on clean machine. | Dev | Pending |
+| **Day 2** | Build AppImage/Binary, Publish to PyPI. Test on clean machine. | Dev | Pending |
 | **Day 3** | Record & Edit "Concept" Video. | Creator | Pending |
-| **Day 4** | Build Landing Page on `gsvv.co.za`. | Web Dev | Pending |
+| **Day 4** | Build Landing Page on `gsvv.co.za` (incl. PyPI/AppImage links). | Web Dev | Pending |
 | **Day 5** | **LAUNCH**: Push to GitHub, Publish Video, Post on Reddit/HN. | All | Pending |
 | **Day 7** | Review Feedback, Fix Critical Bugs. | Dev | Pending |
 
