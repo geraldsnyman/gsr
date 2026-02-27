@@ -3,9 +3,10 @@ import os
 import sys
 
 def create_desktop_entry():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.dirname(script_dir)
     icon_path = os.path.join(base_dir, "assets", "icon.png")
-    run_script = os.path.join(base_dir, "run.sh")
+    run_script = os.path.join(script_dir, "run.sh")
     
     desktop_file_content = f"""[Desktop Entry]
 Name=Gerald's Screen Recorder

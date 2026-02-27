@@ -1,12 +1,20 @@
 
 import signal
 import sys
+import os
+import urllib.request
 import time
 import argparse
 from recorder import ScreenRecorder
 
 # GUI imports inside main check to allow faster CLI startup or optional deps
 # content of ui.py will be imported only if needed
+
+try:
+    from importlib.metadata import version
+    __version__ = version("gsr")
+except Exception:
+    __version__ = "1.0.3"
 
 recorder_instance = None
 app_instance = None
@@ -23,12 +31,45 @@ def signal_handler(sig, frame):
     
     sys.exit(0)
 
+def setup_desktop_entry():
+    icon_url = "https://raw.githubusercontent.com/geraldsnyman/gsr/master/assets/icon.png"
+    icon_path = os.path.expanduser("~/.local/share/icons/gsr-icon.png")
+    desktop_path = os.path.expanduser("~/.local/share/applications/gsr.desktop")
+    
+    desktop_file_content = f"""[Desktop Entry]
+Name=Gerald's Screen Recorder
+Comment=A simple screen recorder application
+Exec={os.path.abspath(sys.argv[0])}
+Icon={icon_path}
+Terminal=false
+Type=Application
+Categories=Utility;Recorder;
+StartupWMClass=GSR
+"""
+    try:
+        os.makedirs(os.path.dirname(icon_path), exist_ok=True)
+        print("Downloading latest icon from GitHub...")
+        urllib.request.urlretrieve(icon_url, icon_path)
+        
+        os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
+        with open(desktop_path, "w") as f:
+            f.write(desktop_file_content)
+        
+        os.chmod(desktop_path, 0o755)
+        print(f"Created desktop entry at: {desktop_path}")
+        os.system("update-desktop-database ~/.local/share/applications")
+        print("Desktop setup complete!")
+    except Exception as e:
+        print(f"Failed to create desktop entry: {e}")
+
 def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     parser = argparse.ArgumentParser(prog="gsr", description="Gerald's Screen Recorder (GSR)")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
     
     # Core Operations
+    parser.add_argument("--setup-desktop", action="store_true", help="Install Linux desktop entry and icon")
     parser.add_argument("--save", action="store_true", help="Save the provided CLI arguments to permanent GUI settings")
     
     # Capture Overrides
@@ -50,6 +91,10 @@ def main():
     parser.add_argument("--cursor-style", type=str, choices=["dot", "target", "pointer"], help="Override Cursor Style")
     
     args = parser.parse_args()
+
+    if args.setup_desktop:
+        setup_desktop_entry()
+        sys.exit(0)
 
     # Automatically run in CLI mode if any arguments are passed
     if len(sys.argv) > 1:

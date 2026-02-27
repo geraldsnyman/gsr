@@ -5,6 +5,12 @@ import os
 from tkinter import filedialog
 from recorder import ScreenRecorder
 
+try:
+    from importlib.metadata import version
+    __version__ = version("gsr")
+except Exception:
+    __version__ = "1.0.3"
+
 # ── Color Palette ──────────────────────────────────────────────
 BG_DARK       = "#1a1a2e"     # Main background
 CARD_BG       = "#16213e"     # Card/section background
@@ -26,7 +32,7 @@ ctk.set_default_color_theme("blue")
 class ScreenRecorderApp(ctk.CTk):
     def __init__(self):
         super().__init__(className="GSR")
-        self.title("Gerald's Screen Recorder")
+        self.title(f"Gerald's Screen Recorder (v{__version__})")
         self.geometry("550x580")
         self.minsize(450, 580)
         self.resizable(False, False)
@@ -82,7 +88,7 @@ class ScreenRecorderApp(ctk.CTk):
         header.grid_columnconfigure(1, weight=1)
 
         self.label_title = ctk.CTkLabel(
-            header, text="GSR",
+            header, text=f"GSR v{__version__}",
             font=("Roboto", 28, "bold"), text_color=TEXT_PRIMARY, anchor="w"
         )
         self.label_title.grid(row=0, column=0, sticky="w")
