@@ -3,6 +3,8 @@
 
 # Setup script for Gerald's Screen Recorder (GSR)
 
+cd "$(dirname "$0")/.." || exit
+
 echo "Checking system dependencies..."
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     if command -v apt-get &> /dev/null; then

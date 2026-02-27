@@ -3,6 +3,8 @@
 # release.sh
 # Automates the building of the PyPI package and the standalone Linux AppImage
 
+cd "$(dirname "$0")/.." || exit
+
 echo "=== Packaging Gerald's Screen Recorder ==="
 
 # Ensure virtual environment is active
