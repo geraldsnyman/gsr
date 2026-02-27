@@ -70,6 +70,10 @@ To run the application locally from the source code:
 To build the standalone AppImage and PyPI packages yourself:
 ```bash
 ./scripts/release.sh
+
+# If you are an authorized maintainer, you can auto-publish to GitHub releases:
+./scripts/release.sh --publish
+
 # The compiled binary will be located at: GSR-x86_64.AppImage
 # The PyPI distribution files will be in: dist/
 ```
