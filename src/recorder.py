@@ -10,13 +10,19 @@ from PIL import Image
 from pynput import keyboard, mouse
 
 class ScreenRecorder:
-    def __init__(self, output_dir="recordings"):
-        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.output_dir = os.path.join(self.base_dir, output_dir)
-        self.config_file = os.path.join(self.base_dir, "config.json")
+    def __init__(self, output_dir=None):
+        # Base config paths - completely decoupled from install directory
+        config_dir = os.path.expanduser("~/.config/gsr")
+        os.makedirs(config_dir, exist_ok=True)
+        self.config_file = os.path.join(config_dir, "config.json")
         
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
+        # Output directory path
+        if output_dir:
+            self.output_dir = output_dir
+        else:
+            self.output_dir = os.path.expanduser("~/Videos/GSR")
+        
+        os.makedirs(self.output_dir, exist_ok=True)
 
         self.running = False
         self.recording_thread = None
