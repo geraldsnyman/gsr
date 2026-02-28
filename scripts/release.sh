@@ -92,8 +92,4 @@ if [ "$1" == "--publish" ]; then
     else
         echo "GitHub CLI (gh) not found. Skipping automated GitHub release."
     fi
-else
-    echo "--- Notice ---"
-    echo "Skipping automated GitHub Release."
-    echo "If you are the repository owner, run './scripts/release.sh --publish' to automatically upload to GitHub."
 fi
