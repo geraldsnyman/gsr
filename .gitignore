@@ -40,3 +40,6 @@ appimagetool
 *.spec
 test_*.py
 bin/
+
+# Private
+_launch/
