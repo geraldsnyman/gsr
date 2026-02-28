@@ -46,4 +46,4 @@ We run `python -m build`. This creates a `.tar.gz` (Source Archive) and a `.whl`
 ## Next Steps
 To begin packaging right now, we should:
 1. Initialize the **PyInstaller** process to generate the `.spec` file.
-2. Draft a `release.sh` bash script to automatically execute the whole PyInstaller -> AppImage pipeline so you never have to do it manually. 
+2. Draft a `scripts/release.sh` bash script to automatically execute the whole PyInstaller -> AppImage -> PyPI -> GitHub Release pipeline so you never have to do it manually. 

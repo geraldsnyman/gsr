@@ -44,7 +44,7 @@ For tutorials utilizing a "split-screen" layout (e.g., a screen divided into qua
 ### C. Packaging & Distribution
 - [x] **Action**: Setup `pyproject.toml` for PyPI publishing (`pipx install gsr`).
 - [x] **Action**: Investigate/Build `AppImage` for universal Linux distribution.
-- [x] **Action**: Create a `release.sh` script to automate packaging & PyPI upload.
+- [x] **Action**: Create a `scripts/release.sh` script to automate packaging, PyPI upload, and automated GitHub Releases.
 
 ### D. Testing
 - [x] **Test**: Verify on a fresh Linux install (Options: VM, Live USB, Docker).
@@ -99,8 +99,8 @@ For tutorials utilizing a "split-screen" layout (e.g., a screen divided into qua
 ## 6. Action Plan
 | Timeline | Task | Owner | Status |
 | :--- | :--- | :--- | :--- |
-| **Day 1** | Finalize Code & Docs. Create GitHub Repo. | Dev | In Progress |
-| **Day 2** | Build AppImage/Binary, Publish to PyPI. Test on clean machine. | Dev | Pending |
+| **Day 1** | Finalize Code & Docs. Create GitHub Repo. | Dev | Done |
+| **Day 2** | Build AppImage/Binary, Publish to PyPI. Test on clean machine. | Dev | Done |
 | **Day 3** | Record & Edit "Concept" Video. | Creator | Pending |
 | **Day 4** | Build Landing Page on `gsvv.co.za` (incl. PyPI/AppImage links). | Web Dev | Pending |
 | **Day 5** | **LAUNCH**: Push to GitHub, Publish Video, Post on Reddit/HN. | All | Pending |

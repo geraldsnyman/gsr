@@ -25,12 +25,14 @@ This project is designed to enable a high-efficiency **"Capture Once, Edit Anywh
 /
 ├── README.md               # User documentation
 ├── requirements.txt        # Python dependencies
-├── setup.sh                # Automated installation script
-├── run.sh                  # Execution script
-├── setup_desktop.py        # Linux desktop entry generator
 ├── config.json             # Persistent settings (auto-generated)
 ├── assets/
-│   └── icon.png            # Application Icon
+│   └── icon.png            # Application Icon (Minimalist UI camera design)
+├── scripts/
+│   ├── setup.sh            # Automated installation script
+│   ├── run.sh              # Execution script
+│   ├── release.sh          # Build and deploy pipeline
+│   └── setup_desktop.py    # Linux desktop entry generator
 ├── src/
 │   ├── __init__.py
 │   ├── main.py             # Entry point
@@ -81,8 +83,8 @@ This project is designed to enable a high-efficiency **"Capture Once, Edit Anywh
 - Bypasses sensitivity threshold when keys are pressed, ensuring text entry is never missed.
 
 ### J. Linux Desktop Integration [Completed]
-- Custom application icon.
-- `setup_desktop.py` script to generate `.desktop` file for system integration.
+- Custom minimalist neon application icon.
+- `gsr --setup-desktop` command to dynamically download the icon from GitHub and generate the `.desktop` file.
 - Proper Window Manager identity (WM_CLASS).
 
 ### K. Persistent Settings [Completed]
@@ -92,6 +94,7 @@ This project is designed to enable a high-efficiency **"Capture Once, Edit Anywh
 ### L. CLI Mode [Completed]
 - Run headless mode automatically when configuration flags are provided.
 - Override settings via flags (`-f`, `-s`, `-t`, `-o`, `--keystroke`, etc.).
+- System commands (`--version`, `--setup-desktop`).
 - Include `--save` flag to persist CLI parameters to the GUI settings file.
 
 ### M. Mouse & Cursor Features [Completed]
