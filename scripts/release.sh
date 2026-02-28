@@ -71,3 +71,25 @@ ARCH=x86_64 ./appimagetool "$APPDIR" GSR-x86_64.AppImage
 echo "=== Build Complete! ==="
 echo "PyPI Installable Wheel : dist/"
 echo "Standalone AppImage    : GSR-x86_64.AppImage"
+
+# 4. AUTOMATED GITHUB RELEASE
+if [ "$1" == "--publish" ]; then
+    if command -v gh &> /dev/null; then
+        echo "--- Creating/Updating GitHub Release ---"
+        VERSION=$(grep -m 1 '^version = ' pyproject.toml | cut -d '"' -f 2)
+        TAG="v$VERSION"
+        
+        # Check if the release already exists
+        if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists. Uploading AppImage binary..."
+            gh release upload "$TAG" GSR-x86_64.AppImage --clobber
+        else
+            echo "Creating new release $TAG..."
+            # If the tag doesn't exist locally/remotely, gh will automatically create it
+            gh release create "$TAG" GSR-x86_64.AppImage --title "GSR $TAG" --generate-notes
+        fi
+        echo "GitHub Release process complete! Check it at: https://github.com/geraldsnyman/gsr/releases"
+    else
+        echo "GitHub CLI (gh) not found. Skipping automated GitHub release."
+    fi
+fi
